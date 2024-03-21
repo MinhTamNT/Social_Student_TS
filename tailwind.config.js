@@ -1,10 +1,31 @@
-/** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       fontFamily: {
         sora: ["Sora"],
+      },
+      keyframes: {
+        slideInSidebar: {
+          from: {
+            transform: "translateX(-250px)",
+          },
+          to: {
+            transform: "translateX(0)",
+          },
+        },
+        slideOutSidebar: {
+          from: {
+            transform: "translateX(0)",
+          },
+          to: {
+            transform: "translateX(-250px)",
+          },
+        },
+      },
+      animation: {
+        "slide-in-sidebar": "slideInSidebar 0.3s ease",
+        "slide-out-sidebar": "slideOutSidebar 0.3s ease",
       },
       fontSize: {
         13: "13px",
