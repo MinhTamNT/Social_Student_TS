@@ -15,9 +15,9 @@ export const LayoutDefautl = ({ children }: Props) => {
   return (
     <div className="wrapper">
       <Header onMenuClick={handlerMentClick} />
-      <div className="conatiner pt-[60px]">
-        <Sidebar isOpen={isSidebarOpen} />
-        <div className="content">{children}</div>
+      <div className="conatiner flex min-h-[1000px] pt-[60px] max-w-[100%]">
+        <Sidebar isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+        <div className="content md:w-[1120px] flex-1">{children}</div>
       </div>
     </div>
   );

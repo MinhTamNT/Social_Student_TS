@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
-
+import { IoIosClose } from "react-icons/io";
 interface IProp {
   isOpen: boolean;
+  setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const Sidebar = ({ isOpen }: IProp) => {
+export const Sidebar = ({ isOpen, setIsSidebarOpen }: IProp) => {
   const [isMobile, setIsMobile] = useState(false);
-
+  const handlerCloseMenu = () => {
+    setIsSidebarOpen(false);
+  };
   useEffect(() => {
     const checkIsMobile = () => {
-      setIsMobile(window.innerWidth < 768); // Set 768 as the threshold for mobile devices, you can change it as needed
+      setIsMobile(window.innerWidth < 768);
     };
 
     checkIsMobile();
@@ -28,14 +31,24 @@ export const Sidebar = ({ isOpen }: IProp) => {
   return (
     <div
       className={`md:static absolute top-0 ${
-        isMobile ? "w-[40%] z-10 h-screen bg-white" : "" // Apply mobile styles if isMobile is true
+        isMobile
+          ? "w-[40%] z-10 h-screen bg-white"
+          : "w-[272px] border-r-2 rounded-lg px-5 py-3"
       } ${
         isOpen
           ? "block animate-slide-in-sidebar"
-          : "hidden md:block md:animate-none animate-slide-out-sidebar" // Animation classes
+          : "hidden md:block md:animate-none animate-slide-out-sidebar"
       }`}
     >
-      Sidebar
+      <div className="header_close_sidebar md:hidden block ">
+        <button
+          className="w-[32px] h-[32px] p-2 cursor-pointer hover:opacity-85 md:hidden absolute right-0"
+          onClick={handlerCloseMenu}
+        >
+          <IoIosClose size={24} className="cursor-pointer" />
+        </button>
+      </div>
+      <div>asdasda</div>
     </div>
   );
 };

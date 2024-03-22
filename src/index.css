@@ -8,21 +8,9 @@
   padding: 0;
   box-sizing: border-box;
 }
-@keyframes slideIn {
-  from {
-    transform: translateX(-250px); /* Trạng thái ban đầu */
-  }
-  to {
-    transform: translateX(0); /* Trạng thái cuối cùng */
-  } /* Thêm dấu đóng ngoặc này */
-}
-
-@keyframes slideOut {
-  from {
-    transform: translateX(0); /* Trạng thái ban đầu */
-  }
-  to {
-    transform: translateX(-250px); /* Trạng thái cuối cùng */
-  } /* Thêm dấu đóng ngoặc này */
+@layer components{
+   .btn-default {
+    @apply w-[32px] h-[32px] p-2 cursor-pointer hover:opacity-85 md:hidden
+   }
 }
 

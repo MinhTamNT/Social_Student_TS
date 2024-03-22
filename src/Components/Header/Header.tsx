@@ -1,6 +1,7 @@
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { HiOutlineBell } from "react-icons/hi2";
 import { CiSearch } from "react-icons/ci";
+import { Search } from "../Search/Search";
 interface IProp {
   onMenuClick: () => void;
 }
@@ -19,8 +20,9 @@ export const Header: React.FC<IProp> = ({ onMenuClick }) => {
           <HiOutlineMenuAlt1 size={24} className="cursor-pointer" />
         </button>
       </div>
+      <Search />
       <div className="header-action-right flex items-center gap-2">
-        <div className="header-search">
+        <div className="header-search md:hidden">
           <button className="w-[32px] h-[32px] p-2 cursor-pointer hover:opacity-85">
             <CiSearch size={24} className="cursor-pointer" />
           </button>
