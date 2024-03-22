@@ -27,6 +27,7 @@ export default {
         "slide-in-sidebar": "slideInSidebar 0.3s ease",
         "slide-out-sidebar": "slideOutSidebar 0.3s ease",
       },
+
       fontSize: {
         13: "13px",
         14: "14px",
@@ -40,6 +41,11 @@ export default {
       },
       boxShadow: {
         md: "6px 6px 16px 0 rgba(0, 0, 0, 0.25),-4px -4px 12px 0 rgba(255, 255, 255, 0.3);",
+      },
+      colors: {
+        "text-natural": "#2A3C42",
+        "bg-hover": "#eaedef",
+        "red-color": "rgba(255, 59, 92, 1)",
       },
     },
   },

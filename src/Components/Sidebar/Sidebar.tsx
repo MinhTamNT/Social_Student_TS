@@ -1,11 +1,44 @@
 import React, { useEffect, useState } from "react";
-import { IoIosClose } from "react-icons/io";
+import { IoIosClose, IoIosTrendingUp, IoIosMenu } from "react-icons/io";
+import { GoHome } from "react-icons/go";
+import { FiMessageCircle } from "react-icons/fi";
+import { CiSquarePlus } from "react-icons/ci";
+import { MdOutlineLocalPolice } from "react-icons/md";
+import { Button } from "../Button/Button";
+
 interface IProp {
   isOpen: boolean;
   setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const Sidebar = ({ isOpen, setIsSidebarOpen }: IProp) => {
+  const MenuSidebar = [
+    {
+      id: 1,
+      title: "Home",
+      icon: <GoHome size={30} />,
+    },
+    {
+      id: 2,
+      title: "Message",
+      icon: <FiMessageCircle size={30} />,
+    },
+    {
+      id: 3,
+      title: "Popular",
+      icon: <IoIosTrendingUp size={30} />,
+    },
+    {
+      id: 4,
+      title: "Create Post",
+      icon: <CiSquarePlus size={30} />,
+    },
+    {
+      id: 4,
+      title: "Private Policy",
+      icon: <MdOutlineLocalPolice size={30} />,
+    },
+  ];
   const [isMobile, setIsMobile] = useState(false);
   const handlerCloseMenu = () => {
     setIsSidebarOpen(false);
@@ -29,26 +62,64 @@ export const Sidebar = ({ isOpen, setIsSidebarOpen }: IProp) => {
   }, []);
 
   return (
-    <div
-      className={`md:static absolute top-0 ${
-        isMobile
-          ? "w-[40%] z-10 h-screen bg-white"
-          : "w-[272px] border-r-2 rounded-lg px-5 py-3"
-      } ${
-        isOpen
-          ? "block animate-slide-in-sidebar"
-          : "hidden md:block md:animate-none animate-slide-out-sidebar"
-      }`}
-    >
-      <div className="header_close_sidebar md:hidden block ">
-        <button
-          className="w-[32px] h-[32px] p-2 cursor-pointer hover:opacity-85 md:hidden absolute right-0"
+    <>
+      {isOpen && (
+        <div
+          className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 backdrop-filter backdrop-blur-md "
           onClick={handlerCloseMenu}
-        >
-          <IoIosClose size={24} className="cursor-pointer" />
-        </button>
+        ></div>
+      )}
+      <div
+        className={`md:static absolute top-0 ${
+          isMobile
+            ? "w-[70%] h-screen z-10  bg-white"
+            : "w-[272px] border-r-2 rounded-lg px-5 py-3  max-h-[calc(100vh - 56px - 25px)]"
+        } ${
+          isOpen
+            ? "block animate-slide-in-sidebar"
+            : "hidden md:block md:animate-none animate-slide-out-sidebar"
+        }`}
+      >
+        <div className="header_close_sidebar md:hidden block ">
+          <button
+            className="w-[32px] h-[32px] p-2 cursor-pointer hover:opacity-85 md:hidden absolute right-0"
+            onClick={handlerCloseMenu}
+          >
+            <IoIosClose size={30} className="cursor-pointer" />
+          </button>
+        </div>
+        <div className=" py-2 w-full md:mt-0 mt-10">
+          <div className="">
+            <div className="md:h-[600px] ">
+              {MenuSidebar.map((menu, index) => (
+                <div
+                  className="flex cursor-pointer items-center mb-4 w-full hover:bg-bg-hover p-2 rounded-md"
+                  key={index}
+                >
+                  {menu.icon}
+                  <span className="ml-2 text-16 font-bold">{menu.title}</span>
+                </div>
+              ))}
+              <div className="md:flex items-center gap-2 hidden px-2">
+                <IoIosMenu size={32} />
+                <span className="text-[20px] ">See more</span>
+              </div>
+            </div>
+            <div className="px-2 ">
+              <div className=" flex mb-5 items-center rounded-md w-full">
+                <img
+                  src="https://img.pikbest.com/wp/202345/male-avatar-image-in-the-circle_9588978.jpg!w700wp"
+                  className="w-10 h-10 object-cover"
+                />
+                <Button
+                  className="w-[40%] ml-2 md:px-1 p-2 rounded-md text-white bg-red-color hover:opacity-90"
+                  text="Đăng xuất"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div>asdasda</div>
-    </div>
+    </>
   );
 };
