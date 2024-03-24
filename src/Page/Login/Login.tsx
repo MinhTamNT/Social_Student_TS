@@ -1,15 +1,19 @@
 import React, { useState } from "react";
 import { InputField } from "../../Components/InputFields/InputField";
 import { Button } from "../../Components/Button/Button";
+import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
   return (
     <div className="flex flex-col justify-center items-center h-screen">
       <div>
         <form className="w-full md:w-[450px] md:h-[350px] md:shadow-md md:flex md:justify-center md:items-center md:flex-col  h-full ">
-          <h1 className="font-bold text-[30px] text-center">Welcom back</h1>
+          <h1 className="font-bold text-[30px] text-center uppercase">
+            Welcom back
+          </h1>
           <InputField
             inputType="normal"
             label="Username"
@@ -34,7 +38,11 @@ export const Login = () => {
           <div>
             <p className="flex justify-center items-center gap-2 text-14 mt-2 text-center">
               Do Have account ?
-              <Button text="Sign up" className=" text-blue-400" />
+              <Button
+                text="Sign up"
+                className=" text-blue-400"
+                onClick={() => navigate("/register")}
+              />
             </p>
           </div>
         </form>
