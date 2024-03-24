@@ -1,123 +1,149 @@
-import React, { useState } from "react";
-import { InputField } from "../../Components/InputFields/InputField";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../Components/Button/Button";
+import { CiCamera } from "react-icons/ci";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+
+interface FormValues {
+  username: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  confirmPassword: string;
+  imageUser: string;
+}
 
 export const Register = () => {
-  const [username, setUserName] = useState("");
-  const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [cofirmPassowrd, setConfirmPassword] = useState("");
-  const [imageUser, setImageUser] = useState(null);
   const navigate = useNavigate();
+  const [imageUser, setImageUser] = useState<string | null>(null); // Initialize with null
 
-  const handleSignUp = () => {};
-  const handleImageChange = (event: any) => {
-    const selectedImage = event.target.files[0];
-    setImageUser(selectedImage);
+  const initialValues: FormValues = {
+    username: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    confirmPassword: "",
+    imageUser: "",
+  };
+
+  const validationSchema = Yup.object({
+    username: Yup.string().required("Username is required"),
+    password: Yup.string()
+      .required("Password is required")
+      .min(8, "Password must be at least 8 characters long"),
+    email: Yup.string()
+      .email("Invalid email format")
+      .required("Email is required"),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password"), undefined], "Passwords must match")
+      .required("Confirm Password is required"),
+  });
+
+  const handleSignUp = (values: FormValues) => {
+    console.log(values);
+  };
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const selectedImage = event.target.files[0];
+      setImageUser(URL.createObjectURL(selectedImage));
+    }
   };
 
   return (
     <div className="flex justify-center items-center h-screen">
       <div>
-        <form className="w-full md:w-[750px] md:h-[650px] md:shadow-md md:flex md:flex-col h-full">
-          <h1 className="font-bold text-[30px] md:m-2 md:ml-5 md:text-left text-center uppercase">
-            Sign Up
-          </h1>
-          <div className="md:flex justify-center  gap-2 mt-2">
-            <input
-              type="file"
-              id="image-upload"
-              accept="image/*"
-              onChange={handleImageChange}
-              style={{ display: "none" }}
-            />
-            <label htmlFor="image-upload" className="flex justify-center">
-              <img
-                src={
-                  imageUser
-                    ? URL.createObjectURL(imageUser) // Sử dụng URL của hình ảnh
-                    : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGNz9eFqUxDLaVSroihJ-vey0GV_hHdWGpEU_PeNi0bOBH9ucSE8ANQj1U8NwI_SC1CiU&usqp=CAUtte-avatar-user-upload-pixel-art-user-profile-document-black.png"
-                }
-                alt="Upload"
-                className="cursor-pointer w-[150px] h-[150px]  bg-transparent rounded-3xl object-cover"
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSignUp}
+        >
+          <Form className="w-full md:w-[550px] md:h-[750px] md:shadow-md flex flex-col justify-center items-center  h-full">
+            <h1 className="font-bold text-[30px] md:m-2 md:ml-5 md:text-left text-center uppercase">
+              Sign Up
+            </h1>
+            <div className="md:flex justify-center gap-2 mt-2">
+              <input
+                type="file"
+                id="image-upload"
+                accept="image/*"
+                onChange={handleImageChange}
+                style={{ display: "none" }}
               />
-            </label>
-          </div>
-          <div className="md:flex justify-around ">
-            <InputField
-              inputType="normal"
-              label="First Name"
-              data="Enter your first name"
-              value={firstName}
-              setData={(e) => setFirstName(e.target.value)}
-              classNameInput="p-2 w-[300px] border-[1px] rounded-md mt-2"
+              <label
+                htmlFor="image-upload"
+                className="flex justify-center relative mb-2"
+              >
+                <img
+                  src={
+                    imageUser
+                      ? imageUser
+                      : "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/profile-design-template-4c23db68ba79c4186fbd258aa06f48b3_screen.jpg?ts=1581063859"
+                  }
+                  alt="Upload"
+                  className="cursor-pointer w-[150px] h-[150px] border-2 bg-transparent rounded-full object-cover"
+                />
+                <CiCamera
+                  size={32}
+                  className="bottom-0 right-2  cursor-pointer absolute"
+                />
+              </label>
+            </div>
+            <Field
+              type="text"
+              name="firstName"
+              placeholder="First Name"
+              className="p-2 w-[300px] border-[1px] mt-2 rounded-md mb-2"
             />
-            <InputField
-              inputType="normal"
-              label="Last Name"
-              data="Enter your last name"
-              value={lastName}
-              setData={(e) => setLastName(e.target.value)}
-              classNameInput="p-2 w-[300px] border-[1px] rounded-md mt-2"
+            <Field
+              type="text"
+              name="lastName"
+              placeholder="Last Name"
+              className="p-2 w-[300px] border-[1px] mt-2 rounded-md mb-2"
             />
-          </div>
-          <div className="md:flex justify-around  gap-2">
-            <InputField
-              inputType="normal"
-              label="Username"
-              data="Enter your username"
-              value={username}
-              setData={(e) => setUserName(e.target.value)}
-              classNameInput="p-2 w-[300px] border-[1px] mt-2 rounded-md"
+            <Field
+              type="text"
+              name="username"
+              placeholder="Username"
+              className="p-2 w-[300px] border-[1px] mt-2 rounded-md mb-2"
             />
-            <InputField
-              inputType="normal"
-              label="Email"
-              data="Enter your email"
-              value={email}
-              setData={(e) => setEmail(e.target.value)}
-              classNameInput="p-2 w-[300px] border-[1px] mt-2 rounded-md"
+            <Field
+              type="text"
+              name="email"
+              placeholder="Email"
+              className="p-2 w-[300px] border-[1px] mt-2 rounded-md mb-2"
             />
-          </div>
-          <div className="md:flex justify-around  gap-2">
-            <InputField
-              inputType="normal"
-              label="Password"
-              data="Enter your password"
+            <Field
               type="password"
-              value={password}
-              setData={(e) => setPassword(e.target.value)}
-              classNameInput="p-2 w-[300px] border-[1px] mt-2 rounded-md"
+              name="password"
+              placeholder="Password"
+              className="p-2 w-[300px] border-[1px] mt-2 rounded-md mb-2"
             />
-            <InputField
-              inputType="normal"
-              label="Confirm Password"
-              data="Enter your confirm password"
+            <Field
               type="password"
-              value={cofirmPassowrd}
-              setData={(e) => setConfirmPassword(e.target.value)}
-              classNameInput="p-2 w-[300px] border-[1px] mt-2 rounded-md"
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              className="p-2 w-[300px] border-[1px] mt-2 rounded-md"
             />
-          </div>
-          <div className="md:flex md:justify-center">
-            <Button
-              text="Sign Up"
-              className="w-full md:w-[300px]  text-white bg-black p-3 rounded-md mt-2"
-              onClick={handleSignUp}
-            />
-          </div>
-          <div className="flex justify-center items-center gap-2 mt-2 text-center">
-            <span>Already have an account?</span>
-            <Button
-              text="Sign in"
-              className="text-blue-400"
-              onClick={() => navigate("/login")}
-            />
-          </div>
-        </form>
+            <div className="md:flex md:justify-center">
+              <Button
+                text="Sign Up"
+                className="w-[300px] md:w-[300px] text-white bg-black p-3 rounded-md md:mt-5 mt-3"
+              />
+            </div>
+            <div className="flex justify-center items-center gap-2 mt-2 text-center">
+              <span>Already have an account?</span>
+              <Button
+                text="Sign in"
+                className="text-blue-400"
+                onClick={() => navigate("/login")}
+              />
+            </div>
+          </Form>
+        </Formik>
       </div>
     </div>
   );
