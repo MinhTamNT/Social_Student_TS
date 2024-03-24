@@ -29,7 +29,6 @@ export const SearchItem = () => {
       imageUser:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIY8AOITs8a2do2yq2wT0zd-SdgEtRoNyZmQg6XThnBe4-lH-Lu9yiKO0wSU9McQ-zbBA&usqp=CAU",
     },
-    // Add more search items as needed
   ]);
 
   return (

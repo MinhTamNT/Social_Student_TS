@@ -105,18 +105,6 @@ export const Sidebar = ({ isOpen, setIsSidebarOpen }: IProp) => {
                 <span className="text-[20px] ">See more</span>
               </div>
             </div>
-            <div className="px-2 ">
-              <div className=" flex mb-5 items-center rounded-md w-full">
-                <img
-                  src="https://img.pikbest.com/wp/202345/male-avatar-image-in-the-circle_9588978.jpg!w700wp"
-                  className="w-10 h-10 object-cover"
-                />
-                <Button
-                  className="w-[40%] ml-2 md:px-1 p-2 rounded-md text-white bg-red-color hover:opacity-90"
-                  text="Đăng xuất"
-                />
-              </div>
-            </div>
           </div>
         </div>
       </div>

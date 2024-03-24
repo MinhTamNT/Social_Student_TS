@@ -3,10 +3,12 @@ import React from "react";
 interface IProp {
   data: string;
   setData: (e: React.ChangeEvent<HTMLInputElement>) => void; // Thêm prop onChange
-  value: string; 
+  value: string;
   label?: string;
   inputType: string;
-  className?: string;
+  type?: string;
+  classNameLabel?: string;
+  classNameInput?: string;
 }
 
 export const InputField = ({
@@ -15,11 +17,13 @@ export const InputField = ({
   value,
   label,
   inputType,
-  className,
+  type,
+  classNameLabel,
+  classNameInput,
 }: IProp) => {
   return (
-    <>
-      {label && <label>{label}</label>}
+    <div className="flex flex-col mb-5">
+      {label && <label className={classNameLabel}>{label}</label>}
       {inputType === "textarea" ? (
         <textarea
           placeholder={label || ""}
@@ -27,13 +31,13 @@ export const InputField = ({
         ></textarea>
       ) : (
         <input
-          type="text"
-          className={className}
+          type={type}
+          className={classNameInput}
           placeholder={data}
           value={value} // Sử dụng prop value thay cho data
           onChange={setData} // Sử dụng prop onChange
         />
       )}
-    </>
+    </div>
   );
 };
