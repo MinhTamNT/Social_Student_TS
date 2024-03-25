@@ -1,6 +1,8 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import { LoginUser } from "../../Redux/apiRequest";
 
 interface FormValues {
   username: string;
@@ -14,12 +16,20 @@ export const Login = () => {
   };
 
   const navigate = useNavigate();
-
-  const handleSubmit = (
+  const dispatch = useDispatch();
+  const handleSubmit = async (
     values: FormValues,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
-    console.log(values);
+    const newUser = {
+      username: values.username,
+      password: values.password,
+      client_id: process.env.CLIENT_ID,
+      client_secret: process.env.CLIENT_SECRET,
+      grant_type: "password",
+    };
+
+    await LoginUser(newUser, dispatch, navigate);
     setSubmitting(false);
   };
 
