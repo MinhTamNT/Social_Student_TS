@@ -24,10 +24,11 @@ export const Login = () => {
     const newUser = {
       username: values.username,
       password: values.password,
-      client_id: process.env.CLIENT_ID,
-      client_secret: process.env.CLIENT_SECRET,
+      client_id: import.meta.env.VITE_CLIENT_ID,
+      client_secret: import.meta.env.VITE_CLIENT_SECRET,
       grant_type: "password",
     };
+    console.log(newUser);
 
     await LoginUser(newUser, dispatch, navigate);
     setSubmitting(false);
