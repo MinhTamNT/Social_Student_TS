@@ -5,6 +5,9 @@ import { Search } from "../Search/Search";
 import { Button } from "../Button/Button";
 import { useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css";
+import { Menu } from "../Menu/Menu";
 interface IProp {
   onMenuClick: () => void;
 }
@@ -43,15 +46,24 @@ export const Header: React.FC<IProp> = ({ onMenuClick }) => {
             </div>
             <div className="header-user-action flex items-center">
               <div className="flex items-center">
-                <img
-                  src={user?.avatar_user}
-                  loading="lazy"
-                  className="w-10 h-10 object-cover cursor-pointer hover:opacity-95"
-                />
-                <Button
-                  className="w-[90px] p-2  ml-2 md:px-1  rounded-md text-white bg-red-color hover:opacity-90"
-                  text="Đăng xuất"
-                />
+                <Tippy
+                  render={(attrs) => (
+                    <div {...attrs} tabIndex={-1}>
+                      <Menu />
+                    </div>
+                  )}
+                >
+                  <img
+                    src={user?.avatar_user}
+                    loading="lazy"
+                    className="w-10 h-10 object-cover cursor-pointer hover:opacity-95"
+                  />
+                </Tippy>
+                <Tippy content="Đăng xuất" placement="bottom">
+                  <button className="w-[90px] p-2  ml-2 md:px-1  rounded-md text-white bg-red-color hover:opacity-90">
+                    Đăng Xuất
+                  </button>
+                </Tippy>
               </div>
             </div>
           </>

@@ -1,5 +1,5 @@
 // ProtectedRoute.tsx
-import React, { ReactElement, useEffect } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { Navigate } from "react-router-dom";
@@ -15,15 +15,22 @@ interface IProp {
 }
 
 const ProtectedRoute = ({ children }: IProp) => {
+  const [showLoading, setShowLoading] = useState(true);
+
   const dispatch = useDispatch();
   const authUser = useSelector(
     (state: RootState) => state.auth?.login?.currentUser
+  );
+  const isAuth = useSelector(
+    (state: RootState) => state?.auth?.login?.isFetching
   );
   useEffect(() => {
     const getUser = async () => {
       dispatch(getUserStart());
       try {
-        const res = await AuthAPI(authUser?.access_token).get(endpoints['current_user']);
+        const res = await AuthAPI(authUser?.access_token).get(
+          endpoints["current_user"]
+        );
         dispatch(getUserSucess(res.data));
       } catch (error) {
         console.log(error);
@@ -36,7 +43,6 @@ const ProtectedRoute = ({ children }: IProp) => {
   if (!authUser) {
     return <Navigate to="/login" />;
   }
-
   return children;
 };
 
