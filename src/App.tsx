@@ -1,13 +1,15 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { publicRoute } from "./Route/route";
 import { LayoutDefautl } from "./Components/LayoutDefault/LayoutDefautl";
 import React from "react";
+import { RouteSocial } from "./Route/route";
+import ProtectedRoute from "./Components/RequireAuth/RequireAuth";
+
 export const App = () => {
   return (
     <Router>
       <div className="App">
         <Routes>
-          {publicRoute.map((route, index) => {
+          {RouteSocial.map((route, index) => {
             const Page = route.component;
             const Layout =
               route.layout === null ? React.Fragment : LayoutDefautl;
@@ -17,7 +19,13 @@ export const App = () => {
                 path={route.path}
                 element={
                   <Layout>
-                    <Page />
+                    {route.isAuthencatied ? (
+                      <ProtectedRoute>
+                        <Page />
+                      </ProtectedRoute>
+                    ) : (
+                      <Page />
+                    )}
                   </Layout>
                 }
               />

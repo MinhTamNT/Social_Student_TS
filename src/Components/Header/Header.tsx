@@ -3,11 +3,16 @@ import { HiOutlineBell } from "react-icons/hi2";
 import { CiSearch } from "react-icons/ci";
 import { Search } from "../Search/Search";
 import { Button } from "../Button/Button";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Redux/store";
 interface IProp {
   onMenuClick: () => void;
 }
 export const Header: React.FC<IProp> = ({ onMenuClick }) => {
-  const user = false;
+  const user = useSelector(
+    (state: RootState) => state?.user?.user?.currentUser
+  );
+
   return (
     <header className=" bg-slate-100 shadow-md h-[60px] top-0 left-0 px-2 py-2 fixed w-full z-10 flex items-center justify-between">
       <div className="header-left">
@@ -39,7 +44,7 @@ export const Header: React.FC<IProp> = ({ onMenuClick }) => {
             <div className="header-user-action flex items-center">
               <div className="flex items-center">
                 <img
-                  src="https://cdn-icons-png.freepik.com/512/219/219968.png"
+                  src={user?.avatar_user}
                   loading="lazy"
                   className="w-10 h-10 object-cover cursor-pointer hover:opacity-95"
                 />

@@ -28,7 +28,6 @@ export const Login = () => {
       client_secret: import.meta.env.VITE_CLIENT_SECRET,
       grant_type: "password",
     };
-    console.log(newUser);
 
     await LoginUser(newUser, dispatch, navigate);
     setSubmitting(false);
