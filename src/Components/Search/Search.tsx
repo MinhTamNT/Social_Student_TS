@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import Tippy from "@tippyjs/react";
+import { useState } from "react";
+import Tippy from "@tippyjs/react/headless";
 import "tippy.js/dist/tippy.css";
 import { SearchItem } from "./SearchItem";
 

@@ -1,5 +1,10 @@
 import React from "react";
+import { MenuItem } from "./MenuItem";
 
 export const Menu = () => {
-  return <div className="w-[350px] bg-slate-700 rounded-lg">Menu</div>;
+  return (
+    <div className="md:w-[150px]  bg-[#f9fafa] h-[170px] p-3 rounded-lg">
+      <MenuItem />
+    </div>
+  );
 };

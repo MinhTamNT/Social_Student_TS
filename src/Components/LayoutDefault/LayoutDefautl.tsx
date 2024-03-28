@@ -8,7 +8,7 @@ type Props = {
 
 export const LayoutDefautl = ({ children }: Props) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
+  
   const handlerMentClick = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };

@@ -6,7 +6,7 @@ export const LoginUser = async (newUser: any, dispatch: any, navigate: any) => {
   try {
     const res = await API.post(endpoints["login"], newUser);
     dispatch(loginSucces(res.data));
-    navigate("/")
+    navigate("/");
   } catch (error) {
     console.log(error);
     dispatch(loginFail());

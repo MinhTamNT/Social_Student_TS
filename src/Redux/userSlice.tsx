@@ -1,3 +1,4 @@
+// userSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface UserState {
@@ -6,47 +7,34 @@ interface UserState {
     isFetching: boolean;
     error: boolean;
   };
-  updateUser: {
-    success: boolean;
-    isFetching: boolean;
-    error: boolean;
-  };
-  followerUser: {
-    success: boolean;
-    isFetching: boolean;
-    error: boolean;
-  };
+  loadingPage: boolean;
 }
+
 const initialState: UserState = {
   user: {
     currentUser: null,
     isFetching: false,
     error: false,
   },
-  updateUser: {
-    success: false,
-    isFetching: false,
-    error: false,
-  },
-  followerUser: {
-    success: false,
-    isFetching: false,
-    error: false,
-  },
+  loadingPage: false,
 };
+
 export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
     getUserStart: (state) => {
       state.user.isFetching = true;
+      state.loadingPage = true;
     },
     getUserSucess: (state, action: PayloadAction<any>) => {
       state.user.currentUser = action.payload;
       state.user.error = false;
+      state.loadingPage = false;
     },
     getUserFail: (state) => {
       state.user.error = true;
+      state.loadingPage = false;
     },
   },
 });

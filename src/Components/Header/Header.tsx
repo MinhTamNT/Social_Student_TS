@@ -5,8 +5,9 @@ import { Search } from "../Search/Search";
 import { Button } from "../Button/Button";
 import { useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
-import Tippy from "@tippyjs/react";
+import Tippy from "@tippyjs/react/headless";
 import "tippy.js/dist/tippy.css";
+import "tippy.js/dist/svg-arrow.css";
 import { Menu } from "../Menu/Menu";
 interface IProp {
   onMenuClick: () => void;
@@ -47,9 +48,15 @@ export const Header: React.FC<IProp> = ({ onMenuClick }) => {
             <div className="header-user-action flex items-center">
               <div className="flex items-center">
                 <Tippy
+                  interactive={true}
+                  arrow={true}
+                
+                  placement="bottom-end"
                   render={(attrs) => (
                     <div {...attrs} tabIndex={-1}>
-                      <Menu />
+                      <div className="tippy-content">
+                        <Menu />
+                      </div>
                     </div>
                   )}
                 >
@@ -60,7 +67,7 @@ export const Header: React.FC<IProp> = ({ onMenuClick }) => {
                   />
                 </Tippy>
                 <Tippy content="Đăng xuất" placement="bottom">
-                  <button className="w-[90px] p-2  ml-2 md:px-1  rounded-md text-white bg-red-color hover:opacity-90">
+                  <button className="md:w-[90px] p-2  ml-2 md:px-1  rounded-md text-white bg-red-color hover:opacity-90">
                     Đăng Xuất
                   </button>
                 </Tippy>
