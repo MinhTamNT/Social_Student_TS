@@ -16,7 +16,7 @@ export const Header: React.FC<IProp> = ({ onMenuClick }) => {
   const user = useSelector(
     (state: RootState) => state?.user?.user?.currentUser
   );
-
+  const handlerLogoutUser = () => {};
   return (
     <header className=" bg-slate-100 shadow-md h-[60px] top-0 left-0 px-2 py-2 fixed w-full z-10 flex items-center justify-between">
       <div className="header-left">
@@ -50,7 +50,6 @@ export const Header: React.FC<IProp> = ({ onMenuClick }) => {
                 <Tippy
                   interactive={true}
                   arrow={true}
-                
                   placement="bottom-end"
                   render={(attrs) => (
                     <div {...attrs} tabIndex={-1}>
@@ -67,7 +66,7 @@ export const Header: React.FC<IProp> = ({ onMenuClick }) => {
                   />
                 </Tippy>
                 <Tippy content="Đăng xuất" placement="bottom">
-                  <button className="md:w-[90px] p-2  ml-2 md:px-1  rounded-md text-white bg-red-color hover:opacity-90">
+                  <button className="p-2  ml-2 md:px-1  rounded-md text-white bg-red-color hover:opacity-90">
                     Đăng Xuất
                   </button>
                 </Tippy>

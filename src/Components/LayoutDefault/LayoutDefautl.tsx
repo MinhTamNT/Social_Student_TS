@@ -8,12 +8,12 @@ type Props = {
 
 export const LayoutDefautl = ({ children }: Props) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  
+
   const handlerMentClick = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
   return (
-    <div className="wrapper">
+    <div className="wrapper overflow-auto md:overflow-hidden font-sora">
       <Header onMenuClick={handlerMentClick} />
       <div className="conatiner flex pt-[60px] max-w-[100%]">
         <Sidebar isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
