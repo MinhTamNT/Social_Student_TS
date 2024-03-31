@@ -1,96 +1,34 @@
+import { useState } from "react";
 import { CiSquarePlus } from "react-icons/ci";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Redux/store";
 
 export const PostStory = () => {
-  const userStory = [
-    {
-      id: 1,
-      user: {
-        name: "Marshall",
-        image:
-          "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg",
-      },
-      storyImage:
-        "https://gcs.tripi.vn/public-tripi/tripi-feed/img/473982ukb/mau-hinh-anh-dai-dien-facebook-vui-ve-hanh-phuc-31.jpg",
-    },
-    {
-      id: 5,
-      user: {
-        name: "Marshall",
-        image:
-          "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg",
-      },
-      storyImage:
-        "https://gcs.tripi.vn/public-tripi/tripi-feed/img/473982ukb/mau-hinh-anh-dai-dien-facebook-vui-ve-hanh-phuc-31.jpg",
-    },
-    {
-      id: 9,
-      user: {
-        name: "Marshall",
-        image:
-          "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg",
-      },
-      storyImage:
-        "https://gcs.tripi.vn/public-tripi/tripi-feed/img/473982ukb/mau-hinh-anh-dai-dien-facebook-vui-ve-hanh-phuc-31.jpg",
-    },
-    {
-      id: 10,
-      user: {
-        name: "Marshall",
-        image:
-          "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg",
-      },
-      storyImage:
-        "https://gcs.tripi.vn/public-tripi/tripi-feed/img/473982ukb/mau-hinh-anh-dai-dien-facebook-vui-ve-hanh-phuc-31.jpg",
-    },
-    {
-      id: 11,
-      user: {
-        name: "Marshall",
-        image:
-          "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg",
-      },
-      storyImage:
-        "https://gcs.tripi.vn/public-tripi/tripi-feed/img/473982ukb/mau-hinh-anh-dai-dien-facebook-vui-ve-hanh-phuc-31.jpg",
-    },
-    {
-      id: 13,
-      user: {
-        name: "Marshall",
-        image:
-          "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg",
-      },
-      storyImage:
-        "https://gcs.tripi.vn/public-tripi/tripi-feed/img/473982ukb/mau-hinh-anh-dai-dien-facebook-vui-ve-hanh-phuc-31.jpg",
-    },
-    {
-      id: 2,
-      user: {
-        name: "Minh Tam",
-        image:
-          "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg",
-      },
-      storyImage: null, // Không có storyImage
-    },
-    {
-      id: 3,
-      user: {
-        name: "Minh Tam",
-        image:
-          "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg",
-      },
-      storyImage: null, // Không có storyImage
-    },
-  ];
+  const user = useSelector(
+    (state: RootState) => state?.user?.user?.currentUser
+  );
+  const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
+
+  const openModal = (media: string) => {
+    setSelectedMedia(media);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setSelectedMedia(null);
+    setShowModal(false);
+  };
 
   return (
-    <div className="w-full flex h-[150px]  rounded-lg">
-      <div className="w-full flex gap-3 overflow-auto ">
+    <div className="w-full flex h-[150px] rounded-lg">
+      <div className="md:w-full flex gap-3 overflow-auto">
         <div className="w-[100px] h-full border border-neutral-600 rounded-lg">
           <div className="user relative">
             <img
-              src="https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg"
+              src={user?.avatar_user}
               className="object-cover w-[150px] h-[120px] rounded-lg"
-              alt="User Image"
+              alt="logoUser"
             />
             <button className="absolute bottom-[-9px] left-[40%] ">
               <CiSquarePlus className="" size={24} color="black" />
@@ -100,38 +38,71 @@ export const PostStory = () => {
             </span>
           </div>
         </div>
-        {userStory.length > 0 ? (
-          userStory.map((story) => (
-            <div
+        {user?.stories.length > 0 ? (
+          user?.stories.map((story: any) => (
+            <button
               key={story.id}
-              className="w-[100px] h-full relative cursor-pointer"
+              className="w-[100px] h-full relative"
+              onClick={() => openModal(story.media_file)}
             >
-              {/* Kiểm tra nếu có storyImage */}
-              {story.storyImage && (
+              {story.media_file && (
                 <>
-                  <img
-                    src={story.storyImage}
-                    alt="Story Image"
-                    className=" w-[150px]  h-full object-cover rounded-lg"
-                  />
-                  <div>
+                  {typeof story.media_file === "string" &&
+                  story.media_file.endsWith(".mp4") ? (
+                    <video
+                      src={story.media_file}
+                      className="w-[150px] h-full object-cover rounded-lg"
+                    >
+                      <track
+                        kind="captions"
+                        src="path_to_captions_file.vtt"
+                        srcLang="en"
+                        label="English"
+                      />
+                    </video>
+                  ) : (
                     <img
-                      src={story.user.image}
-                      alt="User Image"
-                      className="w-5 h-5 top-2 absolute left-1 rounded-full border object-cover border-red-color"
+                      src={story.media_file}
+                      alt="story"
+                      className="w-[150px] h-full object-cover rounded-lg"
                     />
-                    <h4 className="text-14 absolute bottom-2 text-white font-bold text-center left-5">
-                      {story.user.name}
-                    </h4>
-                  </div>
+                  )}
                 </>
               )}
-            </div>
+              <img src={} alt="image_user" />
+            </button>
           ))
         ) : (
           <p className="text-white">Không có câu chuyện.</p>
         )}
       </div>
+      {showModal && selectedMedia && (
+        <div className="fixed inset-0 flex z-20 justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white w-full h-screen">
+            {typeof selectedMedia === "string" &&
+            selectedMedia.endsWith(".mp4") ? (
+              <video
+                src={selectedMedia}
+                className="w-full h-full object-cover"
+                autoPlay
+              >
+                <track
+                  kind="captions"
+                  src={selectedMedia}
+                  srcLang="en"
+                  label="English"
+                />
+              </video>
+            ) : (
+              <img
+                src={selectedMedia}
+                alt="selectedMedia"
+                className="w-full h-auto"
+              />
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

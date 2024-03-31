@@ -16,12 +16,12 @@ export const Header: React.FC<IProp> = ({ onMenuClick }) => {
   const user = useSelector(
     (state: RootState) => state?.user?.user?.currentUser
   );
-  const handlerLogoutUser = () => {};
   return (
     <header className=" bg-slate-100 shadow-md h-[60px] top-0 left-0 px-2 py-2 fixed w-full z-10 flex items-center justify-between">
       <div className="header-left">
         <img
           src="https://cdn.haitrieu.com/wp-content/uploads/2021/09/Logo-DH-Mo-TPHCM-OU-V.png"
+          alt="logo-webiste"
           className="h-10 md:flex hidden"
         />
         <button
@@ -62,6 +62,7 @@ export const Header: React.FC<IProp> = ({ onMenuClick }) => {
                   <img
                     src={user?.avatar_user}
                     loading="lazy"
+                    alt="logo_user"
                     className="w-10 h-10 object-cover cursor-pointer hover:opacity-95"
                   />
                 </Tippy>
