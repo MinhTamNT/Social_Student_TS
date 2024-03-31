@@ -3,6 +3,7 @@ import axios, { AxiosInstance } from "axios";
 export const endpoints = {
   login: "o/token/",
   current_user: "user/current-user/",
+  get_story: "story/",
 };
 
 export const AuthAPI = (accessToken: string): AxiosInstance => {

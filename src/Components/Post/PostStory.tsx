@@ -1,15 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CiSquarePlus } from "react-icons/ci";
 import { useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
+import { AuthAPI, endpoints } from "../../Service/ApiConfig";
+import MediaViewer from "../Modal/ModalStory";
+import ModalCreateStory from "../Modal/ModalCreateStory";
 
 export const PostStory = () => {
+  const auth = useSelector(
+    (state: RootState) => state?.auth?.login?.currentUser
+  );
   const user = useSelector(
     (state: RootState) => state?.user?.user?.currentUser
   );
+  const [stories, setStories] = useState<[]>([]);
   const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
-
+  const [isCreateStory, setIsCreateStory] = useState(false);
+  useEffect(() => {
+    const fectStories = async () => {
+      try {
+        const res = await AuthAPI(auth?.access_token).get(
+          endpoints["get_story"]
+        );
+        if (JSON.stringify(res.data) !== JSON.stringify(stories)) {
+          setStories(res.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fectStories();
+  }, [stories]);
   const openModal = (media: string) => {
     setSelectedMedia(media);
     setShowModal(true);
@@ -23,7 +45,10 @@ export const PostStory = () => {
   return (
     <div className="w-full flex h-[150px] rounded-lg">
       <div className="md:w-full flex gap-3 overflow-auto">
-        <div className="w-[100px] h-full border border-neutral-600 rounded-lg">
+        <div
+          className="w-[100px] h-full border border-neutral-600 rounded-lg cursor-pointer"
+          onClick={() => setIsCreateStory(!isCreateStory)}
+        >
           <div className="user relative">
             <img
               src={user?.avatar_user}
@@ -38,8 +63,8 @@ export const PostStory = () => {
             </span>
           </div>
         </div>
-        {user?.stories.length > 0 ? (
-          user?.stories.map((story: any) => (
+        {stories.length > 0 ? (
+          stories.map((story: any) => (
             <button
               key={story.id}
               className="w-[100px] h-full relative"
@@ -69,7 +94,6 @@ export const PostStory = () => {
                   )}
                 </>
               )}
-              <img src={} alt="image_user" />
             </button>
           ))
         ) : (
@@ -77,32 +101,9 @@ export const PostStory = () => {
         )}
       </div>
       {showModal && selectedMedia && (
-        <div className="fixed inset-0 flex z-20 justify-center items-center bg-black bg-opacity-50">
-          <div className="bg-white w-full h-screen">
-            {typeof selectedMedia === "string" &&
-            selectedMedia.endsWith(".mp4") ? (
-              <video
-                src={selectedMedia}
-                className="w-full h-full object-cover"
-                autoPlay
-              >
-                <track
-                  kind="captions"
-                  src={selectedMedia}
-                  srcLang="en"
-                  label="English"
-                />
-              </video>
-            ) : (
-              <img
-                src={selectedMedia}
-                alt="selectedMedia"
-                className="w-full h-auto"
-              />
-            )}
-          </div>
-        </div>
+        <MediaViewer selectedMedia={selectedMedia} />
       )}
+      {isCreateStory && <ModalCreateStory setIsCreateStory = {setIsCreateStory}  />}
     </div>
   );
 };
