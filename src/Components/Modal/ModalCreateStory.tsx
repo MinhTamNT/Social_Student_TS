@@ -22,7 +22,7 @@ const ModalCreateStory: React.FC<ModalCreateStoryProps> = ({
       onClick={() => setIsCreateStory(false)}
     >
       <div
-        className="bg-white w-full md:w-[40%] md:h-[500px] h-screen md:rounded-xl p-2"
+        className="bg-white w-full md:w-[40%] md:h-[600px] h-screen md:rounded-xl p-2"
         onClick={(e) => e.stopPropagation()}
       >
         <Tabs

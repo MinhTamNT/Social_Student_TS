@@ -4,6 +4,7 @@ export const endpoints = {
   login: "o/token/",
   current_user: "user/current-user/",
   get_story: "story/",
+  upload_story : "story/create_story/"
 };
 
 export const AuthAPI = (accessToken: string): AxiosInstance => {
