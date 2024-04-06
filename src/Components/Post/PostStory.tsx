@@ -98,7 +98,9 @@ export const PostStory = () => {
                 alt="avatar_user"
                 className="absolute top-2 w-5 left-2 border rounded-full border-blue-400"
               />
-              <span className="absolute bottom-0  text-13 text-white font-bold left-5">{story?.user?.username}</span>
+              <span className="absolute bottom-0  text-13 text-white font-bold left-5">
+                {story?.user?.username}
+              </span>
             </button>
           ))
         ) : (
@@ -106,7 +108,7 @@ export const PostStory = () => {
         )}
       </div>
       {showModal && selectedMedia && (
-        <MediaViewer selectedMedia={selectedMedia} />
+        <MediaViewer selectedMedia={selectedMedia} onClose={closeModal} />
       )}
       {isCreateStory && (
         <ModalCreateStory setIsCreateStory={setIsCreateStory} />
