@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { CiSquarePlus } from "react-icons/ci";
 import { useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
@@ -17,21 +17,20 @@ export const PostStory = () => {
   const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [isCreateStory, setIsCreateStory] = useState(false);
+
+  const fetchStories = useCallback(async () => {
+    try {
+      const res = await AuthAPI(auth?.access_token).get(endpoints["get_story"]);
+      setStories(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [auth]);
+
   useEffect(() => {
-    const fectStories = async () => {
-      try {
-        const res = await AuthAPI(auth?.access_token).get(
-          endpoints["get_story"]
-        );
-        if (JSON.stringify(res.data) !== JSON.stringify(stories)) {
-          setStories(res.data);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fectStories();
-  }, [stories]);
+    fetchStories();
+  }, [fetchStories]);
+
   const openModal = (media: string) => {
     setSelectedMedia(media);
     setShowModal(true);
@@ -44,7 +43,7 @@ export const PostStory = () => {
 
   return (
     <div className="w-full flex h-[150px] rounded-lg">
-      <div className="md:w-full flex gap-3 overflow-auto">
+      <div className="md:w-full flex gap-3 overflow-hidden ">
         <div
           className="w-[100px] h-full border border-neutral-600 rounded-lg cursor-pointer"
           onClick={() => setIsCreateStory(!isCreateStory)}
@@ -94,6 +93,12 @@ export const PostStory = () => {
                   )}
                 </>
               )}
+              <img
+                src={story?.user?.avatar_user}
+                alt="avatar_user"
+                className="absolute top-2 w-5 left-2 border rounded-full border-blue-400"
+              />
+              <span className="absolute bottom-0  text-13 text-white font-bold left-5">{story?.user?.username}</span>
             </button>
           ))
         ) : (
@@ -103,7 +108,9 @@ export const PostStory = () => {
       {showModal && selectedMedia && (
         <MediaViewer selectedMedia={selectedMedia} />
       )}
-      {isCreateStory && <ModalCreateStory setIsCreateStory = {setIsCreateStory}  />}
+      {isCreateStory && (
+        <ModalCreateStory setIsCreateStory={setIsCreateStory} />
+      )}
     </div>
   );
 };
