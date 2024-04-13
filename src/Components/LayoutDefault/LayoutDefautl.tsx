@@ -13,11 +13,11 @@ export const LayoutDefautl = ({ children }: Props) => {
     setIsSidebarOpen(!isSidebarOpen);
   };
   return (
-    <div className="wrapper overflow-auto  font-sora">
+    <div className="wrapper overflow-x-hidden font-sora">
       <Header onMenuClick={handlerMentClick} />
       <div className="conatiner flex pt-[60px] max-w-[100%]">
         <Sidebar isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
-        <div className="content md:w-[1120px] flex-1">{children}</div>
+        <div className="content md:w-[1120px]">{children}</div>
       </div>
     </div>
   );

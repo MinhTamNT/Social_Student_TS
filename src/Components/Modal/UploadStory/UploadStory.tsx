@@ -12,7 +12,11 @@ export const UploadStory = () => {
   return (
     <>
       {selectedFile ? (
-        <img src={selectedFile} alt="Selected file" className="w-full h-[80%]  object-cover" />
+        <img
+          src={selectedFile}
+          alt="Selected file"
+          className="w-full h-[80%]  object-cover"
+        />
       ) : (
         <div className="container">
           <div className="header">
