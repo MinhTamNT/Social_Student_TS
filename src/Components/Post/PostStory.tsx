@@ -1,5 +1,4 @@
 import { useEffect, useState, useCallback } from "react";
-import { CiSquarePlus } from "react-icons/ci";
 import { useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { AuthAPI, endpoints } from "../../Service/ApiConfig";

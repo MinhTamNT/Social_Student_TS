@@ -15,9 +15,9 @@ export const LayoutDefautl = ({ children }: Props) => {
   return (
     <div className="wrapper overflow-x-hidden font-sora">
       <Header onMenuClick={handlerMentClick} />
-      <div className="conatiner flex pt-[60px] max-w-[100%]">
+      <div className="conatiner flex justify-between pt-[60px] max-w-[100%]">
         <Sidebar isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
-        <div className="content md:w-[1120px]">{children}</div>
+        <div className="content md:w-[1120px] mx-auto">{children}</div>
       </div>
     </div>
   );

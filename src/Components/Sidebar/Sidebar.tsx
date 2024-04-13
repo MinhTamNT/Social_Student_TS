@@ -4,7 +4,6 @@ import { GoHome } from "react-icons/go";
 import { FiMessageCircle } from "react-icons/fi";
 import { CiSquarePlus } from "react-icons/ci";
 import { MdOutlineLocalPolice } from "react-icons/md";
-import { Button } from "../Button/Button";
 
 interface IProp {
   isOpen: boolean;
