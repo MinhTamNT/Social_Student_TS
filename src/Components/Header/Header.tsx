@@ -3,12 +3,14 @@ import { HiOutlineBell } from "react-icons/hi2";
 import { CiSearch } from "react-icons/ci";
 import { Search } from "../Search/Search";
 import { Button } from "../Button/Button";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import Tippy from "@tippyjs/react/headless";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/dist/svg-arrow.css";
 import { Menu } from "../Menu/Menu";
+import { logoutSuccess } from "../../Redux/authSlice";
+import { useNavigate } from "react-router-dom";
 interface IProp {
   onMenuClick: () => void;
 }
@@ -16,6 +18,12 @@ export const Header: React.FC<IProp> = ({ onMenuClick }) => {
   const user = useSelector(
     (state: RootState) => state?.user?.user?.currentUser
   );
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handlerLogoutUser = () => {
+    dispatch(logoutSuccess());
+    navigate("/login");
+  };
   return (
     <header className=" bg-slate-100 shadow-md h-[60px] top-0 left-0 px-2 py-2 fixed w-full z-10 flex items-center justify-between">
       <div className="header-left">
@@ -67,7 +75,10 @@ export const Header: React.FC<IProp> = ({ onMenuClick }) => {
                   />
                 </Tippy>
                 <Tippy content="Đăng xuất" placement="bottom">
-                  <button className="p-2  ml-2 md:px-1  rounded-md text-white bg-red-color hover:opacity-90">
+                  <button
+                    className="p-2  ml-2 md:px-1  rounded-md text-white bg-red-color hover:opacity-90"
+                    onClick={handlerLogoutUser}
+                  >
                     Đăng Xuất
                   </button>
                 </Tippy>

@@ -1,10 +1,9 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { LoginUser } from "../../Redux/apiRequest";
-import { RootState } from "../../Redux/store";
-
+import toast from "react-hot-toast";
 interface FormValues {
   username: string;
   password: string;
@@ -29,7 +28,7 @@ export const Login = () => {
       grant_type: "password",
     };
 
-    await LoginUser(newUser, dispatch, navigate);
+    await LoginUser(newUser, dispatch, navigate, toast);
     setSubmitting(false);
   };
 
