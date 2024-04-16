@@ -41,7 +41,7 @@ export const PostStory = () => {
   };
 
   return (
-    <div className="flex w-[420px] md:w-[680px] overflow-x-auto bg-[#EEEEEE] p-2 rounded-md items-center space-x-4">
+    <div className="flex w-[420px] md:w-[680px] overflow-x-auto  p-2 rounded-md items-center space-x-4">
       <div className="h-[183px] w-[123px] border rounded-md">
         <img
           src={user?.avatar_user}

@@ -32,7 +32,7 @@ export const SearchItem = () => {
   ]);
 
   return (
-    <div className="w-[520px] p-4 bg-[#f9fafa] rounded-lg max-h-[calc(100vh - 56px - 25px)] overflow-y-auto">
+    <div className="w-[520px] p-4 bg-[#f9fafa] rounded-lg max-h-[className(100vh - 56px - 25px)] overflow-y-auto">
       {searchItem.map((search, index) => (
         <div
           key={index}

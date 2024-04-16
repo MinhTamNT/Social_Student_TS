@@ -34,7 +34,7 @@ export const Post = () => {
     },
   ];
   return (
-    <section className="md:w-[680px] w-[372px] h-auto">
+    <section className="md:w-[680px] w-[372px] h-auto mt-2">
       {fakePostData.map((post, index) => (
         <div
           key={index}

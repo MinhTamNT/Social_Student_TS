@@ -19,11 +19,11 @@ const ProtectedRoute = ({ children }: IProp) => {
     (state: RootState) => state.auth?.login?.currentUser
   );
   const isAuth = useSelector(
-    (state: RootState) => state?.auth?.login?.isFetching
+    (state: RootState) => state?.auth?.login?.currentUser
   );
   console.log(isAuth);
 
-  if (isAuth === false && !authUser) {
+  if (isAuth === null) {
     return <Navigate to="/login" />;
   }
 
@@ -34,10 +34,10 @@ const ProtectedRoute = ({ children }: IProp) => {
         const res = await AuthAPI(authUser?.access_token).get(
           endpoints["current_user"]
         );
-        dispatch(getUserSucess(res.data));
+        if (res.status === 200) dispatch(getUserSucess(res.data));
+        else return <Navigate to="/login" />;
       } catch (error) {
-        console.log(error);
-        dispatch(getUserFail());
+        return <Navigate to="/login" />;
       }
     };
     getUser();
