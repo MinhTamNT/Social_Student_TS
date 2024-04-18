@@ -4,23 +4,32 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { CiImageOn } from "react-icons/ci";
 import { IoMdCreate } from "react-icons/io";
+
 export const ModalUploadPost = () => {
   const user = useSelector(
     (state: RootState) => state?.user?.user?.currentUser
   );
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [showUploadArea, setShowUploadArea] = useState(false);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
-      setSelectedImage(files[0]);
+      setSelectedFiles((prevFiles) => [...prevFiles, ...Array.from(files)]);
     }
   };
 
   const handleUploadButtonClick = () => {
     setShowUploadArea(true);
   };
+
+  const handleAddMediaButtonClick = () => {
+    const input = document.getElementById("file");
+    if (input) {
+      input.click();
+    }
+  };
+  console.log(selectedFiles);
 
   return (
     <div className="fixed inset-0 flex z-20 justify-center items-center bg-black bg-opacity-50 rounded-lg">
@@ -50,23 +59,30 @@ export const ModalUploadPost = () => {
             ></textarea>
             <div className="my-auto">
               {showUploadArea && (
-                <div>
-                  {selectedImage ? (
-                    <>
-                      <div className="selected-image w-full relative overflow-auto">
-                        <img
-                          src={URL.createObjectURL(selectedImage)}
-                          alt="Selected"
-                          className="object-cover"
-                        />
-                        <div className="action-image absolute z-10 top-2 left-2 bg-white p-2 rounded-md hover:opacity-95">
-                          <button className="flex items-center">
-                            <span>Thêm ảnh/video</span>
-                            <IoMdCreate size={24} />
-                          </button>
+                <div className="grid">
+                  {selectedFiles.length > 0 ? (
+                    <div>
+                      {selectedFiles.map((file, index) => (
+                        <div
+                          key={index}
+                          className="selected-image relative overflow-hidden mb-2 "
+                        >
+                          <img
+                            src={URL.createObjectURL(file)}
+                            className="object-cover w-full h-full"
+                          />
+                          <div className="action-image absolute z-10 top-2 left-2 bg-white p-2 rounded-md hover:opacity-95">
+                            <button
+                              className="flex items-center"
+                              onClick={handleAddMediaButtonClick}
+                            >
+                              <span>Thêm ảnh/video</span>
+                              <IoMdCreate size={24} />
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    </>
+                      ))}
+                    </div>
                   ) : (
                     <>
                       <label htmlFor="file" className="labelFile mb-2">
@@ -120,15 +136,16 @@ export const ModalUploadPost = () => {
                 </div>
               )}
               <input
-                className="input"
-                name="text"
                 id="file"
+                className="hidden"
+                name="text"
                 type="file"
+                multiple
+                accept="image/*, video/*"
                 onChange={handleImageChange}
               />
             </div>
           </div>
-
           <div className="border p-4 rounded-lg flex items-center gap-5">
             <span>Thêm vào bài viết của bạn</span>
             <button onClick={handleUploadButtonClick}>
