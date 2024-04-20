@@ -19,7 +19,6 @@ export const Home = () => {
 
   return (
     <>
-      <Toaster position="top-right" reverseOrder={true} />
       <div className="md:w-[1120px] md:ml-[100px] px-2 pt-2">
         {isMobile && <CreatePost />}
         <PostStory />

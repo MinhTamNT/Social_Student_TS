@@ -37,7 +37,7 @@ export const Post = () => {
     <section className="md:w-[680px] w-[372px] h-auto mt-2">
       {fakePostData.map((post, index) => (
         <div
-          key={index}
+          key={post.id}
           className="h-full w-full  mb-4 border rounded-md p-2 hover:bg-[#EEEEEE]"
         >
           <div className="post_header flex items-center justify-between gap-2 ">

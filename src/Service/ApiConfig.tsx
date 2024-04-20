@@ -11,7 +11,10 @@ export const endpoints = {
 export const AuthAPI = (accessToken: string): AxiosInstance => {
   return axios.create({
     baseURL: import.meta.env.VITE_LOCAL_HOST_URL,
-    headers: { Authorization: `Bearer ${accessToken}` },
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "multipart/form-data",
+    },
   });
 };
 console.log(import.meta.env.VITE_LOCAL_HOST_URL);

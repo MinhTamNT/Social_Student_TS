@@ -3,7 +3,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sora: ["Sora"],
+        roboto: ["Roboto"],
       },
       keyframes: {
         slideInSidebar: {
@@ -39,13 +39,15 @@ export default {
         36: "36px",
         48: "48px",
       },
-      boxShadow: {
-        md: "6px 6px 16px 0 rgba(0, 0, 0, 0.25),-4px -4px 12px 0 rgba(255, 255, 255, 0.3);",
-      },
+
       colors: {
         "text-natural": "#2A3C42",
         "bg-hover": "#eaedef",
         "red-color": "rgba(255, 59, 92, 1)",
+        "color-icon-image": "#45bd62",
+        "color-icon_video": "#f02849",
+        "bg-gray": "#EEEEEE",
+        "bg-blue": "#0866ff",
       },
     },
   },

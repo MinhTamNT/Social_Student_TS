@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { LoginUser } from "../../Redux/apiRequest";
-import toast from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 interface FormValues {
   username: string;
   password: string;
@@ -28,7 +28,7 @@ export const Login = () => {
       grant_type: "password",
     };
 
-    await LoginUser(newUser, dispatch, navigate, toast);
+    await LoginUser(newUser, dispatch, navigate);
     setSubmitting(false);
   };
 
@@ -39,57 +39,56 @@ export const Login = () => {
 
   return (
     <div className="flex flex-col justify-center items-center h-screen">
-      <div>
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
-          <Form className="w-full md:w-[450px] md:h-[350px] md:shadow-md flex flex-col justify-center items-center md:flex-col h-full">
-            <h1 className="font-bold text-[30px] text-center uppercase">
-              Welcome back
-            </h1>
-            <Field
-              type="text"
-              name="username"
-              placeholder="Username"
-              className="p-2 w-[300px] border-[1px] mt-2 rounded-md mb-2"
-            />
-            <ErrorMessage
-              name="username"
-              component="div"
-              className="text-red-500 text-left"
-            />
-            <Field
-              type="password"
-              name="password"
-              placeholder="Password"
-              className="p-2 w-[300px] border-[1px] mt-2 rounded-md"
-            />
-            <ErrorMessage
-              name="password"
-              component="div"
-              className="text-red-500"
-            />
+      <Toaster position="top-right" reverseOrder={true} />
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        <Form className="w-full md:w-[450px] md:h-[350px] md:shadow-md flex flex-col justify-center items-center md:flex-col h-full">
+          <h1 className="font-bold text-[30px] text-center uppercase">
+            Welcome back
+          </h1>
+          <Field
+            type="text"
+            name="username"
+            placeholder="Username"
+            className="p-2 w-[300px] border-[1px] mt-2 rounded-md mb-2"
+          />
+          <ErrorMessage
+            name="username"
+            component="div"
+            className="text-red-500 text-left"
+          />
+          <Field
+            type="password"
+            name="password"
+            placeholder="Password"
+            className="p-2 w-[300px] border-[1px] mt-2 rounded-md"
+          />
+          <ErrorMessage
+            name="password"
+            component="div"
+            className="text-red-500"
+          />
+          <button
+            type="submit"
+            className="w-full md:w-[300px] text-white bg-black p-3 rounded-md mt-2"
+          >
+            Sign in
+          </button>
+          <p className="flex justify-center items-center gap-2 text-14 mt-2 text-center">
+            Don't have an account?
             <button
-              type="submit"
-              className="w-full md:w-[300px] text-white bg-black p-3 rounded-md mt-2"
+              type="button"
+              className="text-blue-400"
+              onClick={() => navigate("/register")}
             >
-              Sign in
+              Sign up
             </button>
-            <p className="flex justify-center items-center gap-2 text-14 mt-2 text-center">
-              Don't have an account?
-              <button
-                type="button"
-                className="text-blue-400"
-                onClick={() => navigate("/register")}
-              >
-                Sign up
-              </button>
-            </p>
-          </Form>
-        </Formik>
-      </div>
+          </p>
+        </Form>
+      </Formik>
     </div>
   );
 };
