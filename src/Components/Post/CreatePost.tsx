@@ -7,6 +7,7 @@ export const CreatePost = () => {
   const user = useSelector(
     (state: RootState) => state?.user?.user?.currentUser
   );
+  const [refreshPosts, setRefreshPosts] = useState(false);
   const [isModalUploadPost, setModalUploadPost] = useState(false);
   const handlerOpenUploadPost = () => {
     setModalUploadPost(!isModalUploadPost);
@@ -36,7 +37,10 @@ export const CreatePost = () => {
         </div>
       </div>
       {isModalUploadPost && (
-        <ModalUploadPost setModalUploadPost={setModalUploadPost} />
+        <ModalUploadPost
+          setModalUploadPost={setModalUploadPost}
+          setRefreshPosts={setRefreshPosts}
+        />
       )}
     </>
   );

@@ -51,8 +51,10 @@ export const postSlice = createSlice({
     },
     getAllPostSuccess: (state, action: PayloadAction<any[]>) => {
       state.allPosts.pending = false;
+      const existingIds = new Set(state.allPosts.posts.map((post) => post.id));
       state.allPosts.posts = [
-        ...new Set([...state.allPosts.posts, ...action.payload]),
+        ...action.payload.filter((post) => !existingIds.has(post.id)),
+        ...state.allPosts.posts,
       ];
     },
     getOnePostStart: (state) => {

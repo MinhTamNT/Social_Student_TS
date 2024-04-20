@@ -5,6 +5,8 @@ import {
   createPostFailed,
   createPostStart,
   createPostSuccess,
+  getAllPostStart,
+  getAllPostSuccess,
 } from "./postSlice";
 
 export const LoginUser = async (newUser: any, dispatch: any, navigate: any) => {
@@ -45,9 +47,17 @@ export const createPost = async (
       dispatch(createPostFailed());
     }
   } catch (error) {
-    // Xử lý lỗi
     console.log(error);
     toast.error("Đã xảy ra lỗi khi tạo bài viết");
     dispatch(createPostFailed());
+  }
+};
+export const getAllPost = async (access_token: string, dispatch: any) => {
+  dispatch(getAllPostStart());
+  try {
+    const res = await AuthAPI(access_token).get(endpoints["all_post"]);
+    dispatch(getAllPostSuccess(res.data));
+  } catch (error) {
+    console.log(error);
   }
 };

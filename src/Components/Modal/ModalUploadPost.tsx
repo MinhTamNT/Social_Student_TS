@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoMdClose, IoMdCreate } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
@@ -8,6 +8,7 @@ import { createPost } from "../../Redux/apiRequest";
 
 interface IProp {
   setModalUploadPost: React.Dispatch<React.SetStateAction<boolean>>;
+  setRefreshPosts: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export const ModalUploadPost = ({ setModalUploadPost }: IProp) => {
   const user = useSelector(
@@ -18,13 +19,12 @@ export const ModalUploadPost = ({ setModalUploadPost }: IProp) => {
   );
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [showUploadArea, setShowUploadArea] = useState(false);
+  const [refreshPosts, setRefreshPosts] = useState(false);
   const [contentPost, setContentPost] = useState<string>(
-    "bạn đang nghĩ gì thế ?"
+    "Bạn đang nghĩ gì thế?"
   );
-  const handlerCloseModal = () => {
-    setModalUploadPost(false);
-  };
   const dispatch = useDispatch();
+
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
@@ -42,20 +42,26 @@ export const ModalUploadPost = ({ setModalUploadPost }: IProp) => {
       input.click();
     }
   };
+
   const handlePostSubmit = async () => {
-    const postData = {
-      content: contentPost,
-      files: selectedFiles,
-    };
+    const formData = new FormData();
+    formData.append("content", contentPost);
+    selectedFiles.forEach((file) => {
+      formData.append(`media_file`, file);
+    });
 
     try {
-      await createPost(auth?.access_token, postData, dispatch);
+      await createPost(auth?.access_token, formData, dispatch);
       setModalUploadPost(false);
+      setRefreshPosts((prev) => !prev); // Gửi thông điệp làm mới danh sách bài viết khi tạo bài viết mới thành công
     } catch (error) {
       console.error("Đã xảy ra lỗi khi đăng bài viết:", error);
     }
   };
 
+  const handlerCloseModal = () => {
+    setModalUploadPost(false);
+  };
   return (
     <div className="fixed inset-0 flex z-20 justify-center items-center bg-black bg-opacity-50 rounded-lg">
       <div className="bg-white rounded-lg p-2 md:w-2/5 w-full h-screen  md:h-auto">

@@ -6,6 +6,7 @@ export const endpoints = {
   get_story: "story/",
   upload_story: "story/create_story/",
   create_post: "/post/create_post/",
+  all_post: "/post/",
 };
 
 export const AuthAPI = (accessToken: string): AxiosInstance => {

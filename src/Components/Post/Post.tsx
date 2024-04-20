@@ -1,57 +1,43 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { AiFillLike } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
+import { useCallback, useEffect, useState } from "react";
+import { getAllPost } from "../../Redux/apiRequest";
 export const Post = () => {
-  const user = useSelector(
-    (state: RootState) => state?.user?.user?.currentUser
+  const [refreshPosts, setRefreshPosts] = useState(false);
+  const allPosts = useSelector((state: RootState) => state.post.allPosts.posts);
+  const auth = useSelector(
+    (state: RootState) => state?.auth?.login?.currentUser
   );
-  const formatTimestamp = (timestamp: string) => {
-    const date = new Date(timestamp);
-    return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
-  };
-  const fakePostData = [
-    {
-      id: 1,
-      author: "John Doe",
-      avatar_user:
-        "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg",
-      content: "This is the first post.",
-      imageUrl:
-        "https://cdn-i.vtcnews.vn/resize/la/upload/2024/04/11/com-ga13-16043282.jpg",
-      timestamp: "2024-04-11T12:00:00Z",
-    },
-    {
-      id: 2,
-      author: "Jane Smith",
-      content: "This is the second post.",
-      avatar_user:
-        "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg",
-      imageUrl:
-        "https://t.ex-cdn.com/nongnghiep.vn/resize/800x450/files/news/2024/04/13/z5344511212667_4f66b5ac4b29118fc4dc4a24003c1c26-nongnghiep-170603.jpg",
-      timestamp: "2024-04-10T08:30:00Z",
-    },
-  ];
+  const dispatch = useDispatch();
+
+  const memoizedGetAllPost = useCallback(() => {
+    getAllPost(auth?.access_token, dispatch);
+  }, [dispatch, auth]);
+
+  useEffect(() => {
+    memoizedGetAllPost();
+  }, [memoizedGetAllPost, refreshPosts]);
+
   return (
     <section className="md:w-[680px] w-[372px] h-auto mt-2">
-      {fakePostData.map((post, index) => (
+      {allPosts?.map((post, index) => (
         <div
-          key={post.id}
+          key={index}
           className="h-full w-full  mb-4 border rounded-md p-2 hover:bg-[#EEEEEE]"
         >
           <div className="post_header flex items-center justify-between gap-2 ">
             <div className="flex gap-2">
               <img
-                src={post.avatar_user}
+                src={post.user?.avatar_user}
                 alt="avatar_user"
                 className="w-10 h-10 rounded-full"
               />
               <div className="info_user_post flex flex-col">
                 <span className="text-16">{post.author}</span>
-                <span className="text-13">
-                  {formatTimestamp(post.timestamp)}
-                </span>
+                <span className="text-13"></span>
               </div>
             </div>
             <div className="header_action">
@@ -62,11 +48,9 @@ export const Post = () => {
           </div>
           <div className="post_content">
             <p className="text-13">{post.content}</p>
-            <img
-              src={post.imageUrl}
-              className=" object-cover"
-              alt="post_content"
-            />
+            {post?.media_file?.map((imagePost: string, index: number) => (
+              <img src={imagePost} alt="image_post" key={index} />
+            ))}
           </div>
           <div className="post_footer flex items-center gap-10 mt-2 px-1">
             <button className=" p-2 rounded-md flex items-center gap-2">

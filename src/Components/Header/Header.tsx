@@ -71,7 +71,7 @@ export const Header: React.FC<IProp> = ({ onMenuClick }) => {
                     src={user?.avatar_user}
                     loading="lazy"
                     alt="logo_user"
-                    className="w-10 h-10 object-cover cursor-pointer hover:opacity-95"
+                    className="w-10 h-10 object-cover cursor-pointer rounded-full hover:opacity-95"
                   />
                 </Tippy>
                 <Tippy content="Đăng xuất" placement="bottom">
