@@ -101,6 +101,7 @@ export const {
   getOnePostStart,
   getOnePostSuccess,
   getOnePostFailed,
+  deletePostStart,
   deletePostFailed,
   deletePostSuccess,
 } = postSlice.actions;

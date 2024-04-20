@@ -53,7 +53,7 @@ export const ModalUploadPost = ({ setModalUploadPost }: IProp) => {
     try {
       await createPost(auth?.access_token, formData, dispatch);
       setModalUploadPost(false);
-      setRefreshPosts((prev) => !prev); // Gửi thông điệp làm mới danh sách bài viết khi tạo bài viết mới thành công
+      setRefreshPosts((prev) => !prev);
     } catch (error) {
       console.error("Đã xảy ra lỗi khi đăng bài viết:", error);
     }

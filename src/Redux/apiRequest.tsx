@@ -5,6 +5,8 @@ import {
   createPostFailed,
   createPostStart,
   createPostSuccess,
+  deletePostStart,
+  deletePostSuccess,
   getAllPostStart,
   getAllPostSuccess,
 } from "./postSlice";
@@ -60,4 +62,25 @@ export const getAllPost = async (access_token: string, dispatch: any) => {
   } catch (error) {
     console.log(error);
   }
+};
+export const deletePost = async (
+  access_token: string,
+  dispatch: any,
+  idPost: number
+) => {
+  dispatch(deletePostStart());
+
+  try {
+    const res = await AuthAPI(access_token).delete(
+      endpoints.deletePost(idPost)
+    );
+    console.log(res.status);
+
+    if (res.status === 204) {
+      dispatch(deletePostSuccess(res.data));
+      toast.success("Delete post successully");
+    } else {
+      toast.error("You don't author's post");
+    }
+  } catch (error) {}
 };
