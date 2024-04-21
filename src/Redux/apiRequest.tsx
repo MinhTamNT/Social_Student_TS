@@ -9,6 +9,9 @@ import {
   deletePostSuccess,
   getAllPostStart,
   getAllPostSuccess,
+  reactPostFailed,
+  reactPostStart,
+  reactPostSuccess,
 } from "./postSlice";
 
 export const LoginUser = async (newUser: any, dispatch: any, navigate: any) => {
@@ -83,4 +86,23 @@ export const deletePost = async (
       toast.error("You don't author's post");
     }
   } catch (error) {}
+};
+
+export const reactEmojiPost = async (
+  postId: number,
+  access_token: string,
+  dispatch: any,
+  react_type: any
+) => {
+  dispatch(reactPostStart());
+  try {
+    const res = await AuthAPI(access_token).post(
+      endpoints.reactPost(postId),
+      react_type
+    );
+    dispatch(reactPostSuccess(res.data));
+  } catch (error) {
+    dispatch(reactPostFailed());
+    console.log(error);
+  }
 };

@@ -8,6 +8,7 @@ export const endpoints = {
   create_post: "/post/create_post/",
   all_post: "/post/",
   deletePost: (postId: number) => `/post/${postId}/`,
+  reactPost: (Postid: number) => `/post/${Postid}/reaction/`,
 };
 
 export const AuthAPI = (accessToken: string): AxiosInstance => {

@@ -1,16 +1,18 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import { AiFillLike } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
 import { useCallback, useEffect, useState } from "react";
-import { deletePost, getAllPost } from "../../Redux/apiRequest";
+import { deletePost, getAllPost, reactEmojiPost } from "../../Redux/apiRequest";
 import moment from "moment";
 import Tippy from "@tippyjs/react/headless";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/dist/svg-arrow.css";
 import { RiDeleteBack2Line } from "react-icons/ri";
-import { BiHide } from "react-icons/bi";
+import { SlLike } from "react-icons/sl";
+import { FacebookSelector } from "@charkour/react-reactions";
+import { FcLike } from "react-icons/fc";
+import { FaRegFaceLaughSquint } from "react-icons/fa6";
 export const Post = () => {
   const [refreshPosts, setRefreshPosts] = useState(false);
   const allPosts = useSelector((state: RootState) => state.post.allPosts.posts);
@@ -25,6 +27,32 @@ export const Post = () => {
   const memoizedGetAllPost = useCallback(() => {
     getAllPost(auth?.access_token, dispatch);
   }, [dispatch, auth]);
+  const mapReactionToIcon = (reactionType: string) => {
+    switch (reactionType) {
+      case "Like":
+        return <SlLike size={24} />;
+      case "Love":
+        return <FcLike size={24} />;
+      case "Haha":
+        return <FaRegFaceLaughSquint size={24} />;
+      default:
+        return null;
+    }
+  };
+
+  const hasUserReactedToPost = (
+    postId: number,
+    userId: number,
+    reactions: any[]
+  ) => {
+    return reactions.some(
+      (reaction: any) =>
+        reaction.user_id === userId &&
+        (reaction.reaction_type === "Like" ||
+          reaction.reaction_type === "Haha" ||
+          reaction.reaction_type === "Heart")
+    );
+  };
 
   useEffect(() => {
     memoizedGetAllPost();
@@ -37,6 +65,16 @@ export const Post = () => {
       console.log(error);
     }
   };
+
+  const handleReactionClick = (postId: number, reactType: string) => {
+    const reaction = {
+      reaction_type:
+        reactType.charAt(0).toLocaleUpperCase() + reactType.slice(1),
+    };
+
+    reactEmojiPost(postId, auth?.access_token, dispatch, reaction);
+  };
+
   return (
     <section className="md:w-[680px] w-[372px] h-auto mt-2">
       {allPosts?.map((post, index) => (
@@ -111,13 +149,40 @@ export const Post = () => {
             )}
           </div>
           <div className="post_footer flex items-center gap-10 mt-2 px-1">
-            <button className=" p-2 rounded-md flex items-center gap-2">
-              <AiFillLike size={24} />
-              <span>6</span>
-            </button>
+            <Tippy
+              interactive={true}
+              arrow={true}
+              placement="top-end"
+              render={(attrs) => (
+                <div {...attrs} tabIndex={-1}>
+                  <div className="tippy-content ">
+                    <FacebookSelector
+                      reactions={["like", "love", "haha"]}
+                      onSelect={(reaction) =>
+                        handleReactionClick(post.id, reaction)
+                      }
+                    />
+                  </div>
+                </div>
+              )}
+            >
+              <button className=" p-2 rounded-md flex items-center gap-2">
+                {hasUserReactedToPost(post?.id, user?.id, post.reaction) ? (
+                  <>
+                    {mapReactionToIcon(
+                      post?.reaction.find(
+                        (reaction: any) => reaction?.user_id === user?.id
+                      )?.reaction_type
+                    )}
+                  </>
+                ) : (
+                  <SlLike size={24} />
+                )}
+              </button>
+            </Tippy>
             <button className=" p-2 rounded-md flex items-center gap-2">
               <FaRegComment size={24} />
-              <span>6</span>
+              <span>{post.comments}</span>
             </button>
           </div>
         </div>

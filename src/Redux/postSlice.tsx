@@ -4,6 +4,7 @@ interface PostState {
   allPosts: {
     posts: any[];
     comments: any[];
+    reactPost: any[];
     pending: boolean;
     error: boolean;
   };
@@ -20,11 +21,17 @@ interface PostState {
     pending: boolean;
     error: boolean;
   };
+  reactPost: {
+    currentReact: string | null;
+    pending: boolean;
+    error: boolean;
+  };
 }
 const initialState: PostState = {
   allPosts: {
     posts: [],
     comments: [],
+    reactPost: [],
     pending: false,
     error: false,
   },
@@ -38,6 +45,11 @@ const initialState: PostState = {
     error: false,
   },
   createPost: {
+    pending: false,
+    error: false,
+  },
+  reactPost: {
+    currentReact: null,
     pending: false,
     error: false,
   },
@@ -89,6 +101,19 @@ export const postSlice = createSlice({
       state.deletePost.error = true;
       state.deletePost.pending = false;
     },
+    reactPostStart: (state) => {
+      state.reactPost.pending = true;
+      state.reactPost.error = false;
+    },
+    reactPostSuccess: (state, action: PayloadAction<string>) => {
+      state.reactPost.currentReact = action.payload;
+      state.reactPost.pending = false;
+      state.reactPost.error = false;
+    },
+    reactPostFailed: (state) => {
+      state.reactPost.pending = false;
+      state.reactPost.error = true;
+    },
   },
 });
 
@@ -104,5 +129,8 @@ export const {
   deletePostStart,
   deletePostFailed,
   deletePostSuccess,
+  reactPostStart,
+  reactPostFailed,
+  reactPostSuccess,
 } = postSlice.actions;
 export default postSlice.reducer;
