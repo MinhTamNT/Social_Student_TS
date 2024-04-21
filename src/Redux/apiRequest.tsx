@@ -45,6 +45,8 @@ export const createPost = async (
       dispatch(createPostSuccess(res.data));
       toast.success("create the post successully");
     } else {
+      console.log(newPost);
+
       toast.error("Can you check again content your the post");
       dispatch(createPostFailed());
     }
@@ -74,8 +76,6 @@ export const deletePost = async (
     const res = await AuthAPI(access_token).delete(
       endpoints.deletePost(idPost)
     );
-    console.log(res.status);
-
     if (res.status === 204) {
       dispatch(deletePostSuccess(res.data));
       toast.success("Delete post successully");

@@ -10,9 +10,13 @@ import Tippy from "@tippyjs/react/headless";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/dist/svg-arrow.css";
 import { RiDeleteBack2Line } from "react-icons/ri";
+import { BiHide } from "react-icons/bi";
 export const Post = () => {
   const [refreshPosts, setRefreshPosts] = useState(false);
   const allPosts = useSelector((state: RootState) => state.post.allPosts.posts);
+  const user = useSelector(
+    (state: RootState) => state?.user?.user?.currentUser
+  );
   const auth = useSelector(
     (state: RootState) => state?.auth?.login?.currentUser
   );
@@ -54,30 +58,32 @@ export const Post = () => {
                 </span>
               </div>
             </div>
-            <div className="header_action">
-              <Tippy
-                interactive={true}
-                arrow={true}
-                placement="bottom-end"
-                render={(attrs) => (
-                  <div {...attrs} tabIndex={-1}>
-                    <div className="tippy-content w-[200px] hover:bg-bg-hover bg-white rounded-md p-2 ">
-                      <button
-                        className="flex items-center gap-2"
-                        onClick={() => handlerDeletedPost(post.id)}
-                      >
-                        <RiDeleteBack2Line size={24} color="red" />
-                        <span>Delete Post</span>
-                      </button>
+            {post.user.id === user.id && (
+              <div className="header_action">
+                <Tippy
+                  interactive={true}
+                  arrow={true}
+                  placement="bottom-end"
+                  render={(attrs) => (
+                    <div {...attrs} tabIndex={-1}>
+                      <div className="tippy-content w-[200px] hover:bg-bg-hover bg-white rounded-md p-2 ">
+                        <button
+                          className="flex items-center gap-2 px-2"
+                          onClick={() => handlerDeletedPost(post.id)}
+                        >
+                          <RiDeleteBack2Line size={24} />
+                          <span className="text-xl">Delete</span>
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                )}
-              >
-                <button>
-                  <HiOutlineDotsHorizontal size={32} />
-                </button>
-              </Tippy>
-            </div>
+                  )}
+                >
+                  <button>
+                    <HiOutlineDotsHorizontal size={32} />
+                  </button>
+                </Tippy>
+              </div>
+            )}
           </div>
           <div className="post_content mt-2">
             {post.media_file.length === 0 ? (
@@ -87,14 +93,20 @@ export const Post = () => {
             ) : (
               <>
                 <p className="text-13">{post.content}</p>
-                {post?.media_file?.map((imagePost: string, index: number) => (
-                  <img
-                    src={imagePost}
-                    alt="image_post"
-                    key={index}
-                    className="rounded-md"
-                  />
-                ))}
+                <div
+                  className={`grid ${
+                    post.media_file.length > 1 ? "grid-cols-2" : "grid-cols-1"
+                  } gap-4`}
+                >
+                  {post.media_file.map((imagePost: string, index: number) => (
+                    <img
+                      src={imagePost}
+                      alt="image_post"
+                      key={index}
+                      className="rounded-md object-cover w-full h-full"
+                    />
+                  ))}
+                </div>
               </>
             )}
           </div>

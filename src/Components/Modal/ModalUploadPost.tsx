@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { IoMdClose, IoMdCreate } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { CiImageOn } from "react-icons/ci";
 import { UploadIcon } from "../../assets/icons/icon";
 import { createPost } from "../../Redux/apiRequest";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 
 interface IProp {
   setModalUploadPost: React.Dispatch<React.SetStateAction<boolean>>;
-  setRefreshPosts: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export const ModalUploadPost = ({ setModalUploadPost }: IProp) => {
   const user = useSelector(
@@ -23,6 +24,8 @@ export const ModalUploadPost = ({ setModalUploadPost }: IProp) => {
   const [contentPost, setContentPost] = useState<string>(
     "Bạn đang nghĩ gì thế?"
   );
+  const [isSubmitting, setIsSubmitting] = useState(false); // Trạng thái đang xử lý đăng bài
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false); // Trạng thái để hiển thị hoặc ẩn emoji picker
   const dispatch = useDispatch();
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +34,9 @@ export const ModalUploadPost = ({ setModalUploadPost }: IProp) => {
       setSelectedFiles((prevFiles) => [...prevFiles, ...Array.from(files)]);
     }
   };
-
+  const handlePickerOutsideClick = () => {
+    setShowEmojiPicker(false);
+  };
   const handleUploadButtonClick = () => {
     setShowUploadArea(true);
   };
@@ -42,8 +47,19 @@ export const ModalUploadPost = ({ setModalUploadPost }: IProp) => {
       input.click();
     }
   };
+  const addEmoji = (e: any) => {
+    const sym = e.unified.split("_");
+    const emojiCodePoints: number[] = sym.map((el: string) => parseInt(el, 16));
+    const emojiString = emojiCodePoints.map((codePoint: number) =>
+      String.fromCodePoint(codePoint)
+    );
+    console.log(emojiString);
+    setContentPost(contentPost + emojiString);
+  };
 
   const handlePostSubmit = async () => {
+    setIsSubmitting(true);
+
     const formData = new FormData();
     formData.append("content", contentPost);
     selectedFiles.forEach((file) => {
@@ -56,6 +72,8 @@ export const ModalUploadPost = ({ setModalUploadPost }: IProp) => {
       setRefreshPosts((prev) => !prev);
     } catch (error) {
       console.error("Đã xảy ra lỗi khi đăng bài viết:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -64,7 +82,7 @@ export const ModalUploadPost = ({ setModalUploadPost }: IProp) => {
   };
   return (
     <div className="fixed inset-0 flex z-20 justify-center items-center bg-black bg-opacity-50 rounded-lg">
-      <div className="bg-white rounded-lg p-2 md:w-2/5 w-full h-screen  md:h-auto">
+      <div className="bg-white rounded-lg p-2 md:w-[500px] w-full h-screen  md:h-auto">
         <div className="modal_header border-b py-2 flex items-center justify-between">
           <h3 className="text-center mx-auto text-xl">Tạo bài viết mới</h3>
           <button
@@ -75,7 +93,7 @@ export const ModalUploadPost = ({ setModalUploadPost }: IProp) => {
           </button>
         </div>
         <div
-          className="modal_content my-3"
+          className="modal_content my-3 flex flex-col"
           style={{ height: showUploadArea ? "auto" : "100%" }}
         >
           <div className="content_user flex items-center gap-2">
@@ -86,18 +104,19 @@ export const ModalUploadPost = ({ setModalUploadPost }: IProp) => {
             />
             <span className="nameUser">{user?.username}</span>
           </div>
-          <div className="content-input-from-user md:h-[300px] overflow-auto mb-2">
+          <div className="content-input-from-user md:h-[300px] overflow-auto mb-2 relative">
             <textarea
               className="w-full p-2 text-[20px] h-[100px] outline-none"
               placeholder={user.username + contentPost}
-              onChange={(content) => setContentPost(content.target.value)}
+              value={contentPost}
+              onChange={(e) => setContentPost(e.target.value)}
             ></textarea>
-            <div className="my-auto">
+            <div className="my-auto relative">
               {showUploadArea && (
                 <>
                   {selectedFiles.length > 0 ? (
                     <div
-                      className={`rounded-xl border w-full ${
+                      className={`rounded-xl border w-full relative ${
                         selectedFiles.length >= 3
                           ? "grid grid-cols-2 gap-2"
                           : ""
@@ -150,18 +169,34 @@ export const ModalUploadPost = ({ setModalUploadPost }: IProp) => {
             </div>
           </div>
 
-          <div className="border p-4 rounded-lg flex items-center gap-5">
+          <div className="border p-4 rounded-lg flex md:items-center gap-5 relative">
             <span>Thêm vào bài viết của bạn</span>
             <button onClick={handleUploadButtonClick}>
               <CiImageOn size={24} color="#45bd62" />
             </button>
+            {showEmojiPicker && (
+              <div className="absolute md:top-[-450px] right-0 mt-2 mr-2">
+                <Picker
+                  data={data}
+                  onEmojiSelect={addEmoji}
+                  emojiSize={20}
+                  emojiButtonSize={28}
+                />
+              </div>
+            )}
+            <button onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
+              😊
+            </button>
           </div>
           <div className="action-post">
             <button
-              className="w-full mt-2 bg-bg-blue text-white p-2 rounded-md text-16"
+              className={`w-full mt-2 bg-bg-blue text-white p-2 rounded-md text-16 ${
+                isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+              }`}
               onClick={handlePostSubmit}
+              disabled={isSubmitting}
             >
-              Đăng
+              {isSubmitting ? <div className="spinner"></div> : "Đăng"}
             </button>
           </div>
         </div>
