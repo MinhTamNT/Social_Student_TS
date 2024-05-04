@@ -72,7 +72,7 @@ export const Sidebar = ({ isOpen, setIsSidebarOpen }: IProp) => {
         className={`md:static absolute top-0 ${
           isMobile
             ? "w-[70%] h-screen z-10  bg-white"
-            : "w-[272px] border-r-2 rounded-lg px-5 py-3  max-h-[calc(100vh - 56px - 25px)]"
+            : "w-[272px] rounded-lg px-5 py-3  "
         } ${
           isOpen
             ? "block animate-slide-in-sidebar"

@@ -80,7 +80,7 @@ export const deletePost = async (
       endpoints.deletePost(idPost)
     );
     if (res.status === 204) {
-      dispatch(deletePostSuccess(res.data));
+      dispatch(deletePostSuccess());
       toast.success("Delete post successully");
     } else {
       toast.error("You don't author's post");

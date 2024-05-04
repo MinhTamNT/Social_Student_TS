@@ -65,8 +65,8 @@ export const postSlice = createSlice({
       state.allPosts.pending = false;
       const existingIds = new Set(state.allPosts.posts.map((post) => post.id));
       state.allPosts.posts = [
-        ...action.payload.filter((post) => !existingIds.has(post.id)),
         ...state.allPosts.posts,
+        ...action.payload.filter((post) => !existingIds.has(post.id)),
       ];
     },
     getOnePostStart: (state) => {

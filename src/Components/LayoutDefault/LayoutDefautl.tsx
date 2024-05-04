@@ -14,7 +14,7 @@ export const LayoutDefautl = ({ children }: Props) => {
     setIsSidebarOpen(!isSidebarOpen);
   };
   return (
-    <div className="wrapper overflow-x-hidden font-roboto">
+    <div className="wrapper overflow-x-hidden font-roboto ">
       <Toaster position="top-right" reverseOrder={true} />
       <Header onMenuClick={handlerMentClick} />
       <div className="conatiner flex justify-between pt-[60px] max-w-[100%]">

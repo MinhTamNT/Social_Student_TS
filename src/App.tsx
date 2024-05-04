@@ -7,7 +7,7 @@ import ProtectedRoute from "./Components/RequireAuth/RequireAuth";
 export const App = () => {
   return (
     <Router>
-      <div className="App">
+      <div className="App bg-[#f0f2f5] h-screen">
         <Routes>
           {RouteSocial.map((route, index) => {
             const Page = route.component;

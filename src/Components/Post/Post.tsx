@@ -1,32 +1,46 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
-import { HiOutlineDotsHorizontal } from "react-icons/hi";
+import { IoTrashBinOutline } from "react-icons/io5";
 import { FaRegComment } from "react-icons/fa";
-import { useCallback, useEffect, useState } from "react";
-import { deletePost, getAllPost, reactEmojiPost } from "../../Redux/apiRequest";
+import { useEffect, useState } from "react";
+import { reactEmojiPost } from "../../Redux/apiRequest";
 import moment from "moment";
 import Tippy from "@tippyjs/react/headless";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/dist/svg-arrow.css";
-import { RiDeleteBack2Line } from "react-icons/ri";
 import { SlLike } from "react-icons/sl";
 import { FacebookSelector } from "@charkour/react-reactions";
 import { FcLike } from "react-icons/fc";
 import { FaRegFaceLaughSquint } from "react-icons/fa6";
+
+import { ModalDeletedPost } from "../Modal/ModalDeletedPost";
+import { AuthAPI, endpoints } from "../../Service/ApiConfig";
+
 export const Post = () => {
   const [refreshPosts, setRefreshPosts] = useState(false);
-  const allPosts = useSelector((state: RootState) => state.post.allPosts.posts);
-  const user = useSelector(
-    (state: RootState) => state?.user?.user?.currentUser
-  );
-  const auth = useSelector(
-    (state: RootState) => state?.auth?.login?.currentUser
-  );
+  const [isOpenModal, setOpenModal] = useState(false);
+  const [allPost, setAllPost] = useState<any[]>([]); 
+
+  const user = useSelector((state: RootState) => state?.user?.user?.currentUser);
+  const auth = useSelector((state: RootState) => state?.auth?.login?.currentUser);
   const dispatch = useDispatch();
 
-  const memoizedGetAllPost = useCallback(() => {
-    getAllPost(auth?.access_token, dispatch);
-  }, [dispatch, auth]);
+  const handlerModal = () => {
+    setOpenModal(!isOpenModal);
+  };
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const res = await AuthAPI(auth?.access_token).get(endpoints["all_post"]);
+        setAllPost(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchPosts();
+  }, [refreshPosts, auth?.access_token]);
+
   const mapReactionToIcon = (reactionType: string) => {
     switch (reactionType) {
       case "Like":
@@ -34,7 +48,7 @@ export const Post = () => {
       case "Love":
         return <FcLike size={24} />;
       case "Haha":
-        return <FaRegFaceLaughSquint size={24} />;
+        return <FaRegFaceLaughSquint size={24} color="#f78e36" />;
       default:
         return null;
     }
@@ -54,30 +68,19 @@ export const Post = () => {
     );
   };
 
-  useEffect(() => {
-    memoizedGetAllPost();
-  }, [memoizedGetAllPost, refreshPosts]);
-
-  const handlerDeletedPost = async (postId: number) => {
+  const handleReactionClick = async (postId: number, reactType: string) => {
     try {
-      await deletePost(auth?.access_token, dispatch, postId);
+      await reactEmojiPost(postId, auth?.access_token, dispatch, {
+        reaction_type: reactType,
+      });
     } catch (error) {
-      console.log(error);
+      console.error("Error reacting to post:", error);
     }
-  };
-
-  const handleReactionClick = (postId: number, reactType: string) => {
-    const reaction = {
-      reaction_type:
-        reactType.charAt(0).toLocaleUpperCase() + reactType.slice(1),
-    };
-
-    reactEmojiPost(postId, auth?.access_token, dispatch, reaction);
   };
 
   return (
     <section className="md:w-[680px] w-[372px] h-auto mt-2">
-      {allPosts?.map((post, index) => (
+      {allPost.map((post, index) => (
         <div
           key={index}
           className="h-full w-full  mb-4 border rounded-md p-2 hover:bg-[#EEEEEE]"
@@ -85,43 +88,32 @@ export const Post = () => {
           <div className="post_header flex items-center justify-between gap-2 ">
             <div className="flex gap-2">
               <img
-                src={post.user?.avatar_user}
+                src={post?.user?.avatar_user}
                 alt="avatar_user"
                 className="w-10 h-10 rounded-full"
               />
               <div className="info_user_post flex items-center flex-col">
-                <span className="text-16">{post.user?.username}</span>
+                <span className="text-16">{post?.user?.username}</span>
                 <span className="text-13">
                   {moment(post.created_at).fromNow()}
                 </span>
               </div>
             </div>
-            {post.user.id === user.id && (
+            {post.user && post.user.id === user?.id && (
               <div className="header_action">
-                <Tippy
-                  interactive={true}
-                  arrow={true}
-                  placement="bottom-end"
-                  render={(attrs) => (
-                    <div {...attrs} tabIndex={-1}>
-                      <div className="tippy-content w-[200px] hover:bg-bg-hover bg-white rounded-md p-2 ">
-                        <button
-                          className="flex items-center gap-2 px-2"
-                          onClick={() => handlerDeletedPost(post.id)}
-                        >
-                          <RiDeleteBack2Line size={24} />
-                          <span className="text-xl">Delete</span>
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                >
-                  <button>
-                    <HiOutlineDotsHorizontal size={32} />
-                  </button>
-                </Tippy>
+                <button onClick={handlerModal}>
+                  <IoTrashBinOutline size={24} color="red" />
+                </button>
               </div>
             )}
+            <ModalDeletedPost
+              isOpenModal={isOpenModal}
+              postId={post?.id}
+              accessToken={auth?.access_token}
+              setOpenModal={setOpenModal}
+              setRefreshPosts={setRefreshPosts}
+              refreshPosts={refreshPosts}
+            />
           </div>
           <div className="post_content mt-2">
             {post.media_file.length === 0 ? (
@@ -136,11 +128,11 @@ export const Post = () => {
                     post.media_file.length > 1 ? "grid-cols-2" : "grid-cols-1"
                   } gap-4`}
                 >
-                  {post.media_file.map((imagePost: string, index: number) => (
+                  {post.media_file.map((imagePost: string) => (
                     <img
                       src={imagePost}
                       alt="image_post"
-                      key={index}
+                      key={imagePost}
                       className="rounded-md object-cover w-full h-full"
                     />
                   ))}
@@ -167,22 +159,27 @@ export const Post = () => {
               )}
             >
               <button className=" p-2 rounded-md flex items-center gap-2">
-                {hasUserReactedToPost(post?.id, user?.id, post.reaction) ? (
+                {hasUserReactedToPost(post.id, user?.id, post.reaction) ? (
                   <>
                     {mapReactionToIcon(
-                      post?.reaction.find(
+                      post.reaction.find(
                         (reaction: any) => reaction?.user_id === user?.id
                       )?.reaction_type
                     )}
                   </>
                 ) : (
-                  <SlLike size={24} />
+                  <>
+                    <SlLike size={24} />
+                  </>
                 )}
+                {post.reaction.map((title: any) => (
+                  <span key={title?.id}>{title?.reaction_type}</span>
+                ))}
               </button>
             </Tippy>
             <button className=" p-2 rounded-md flex items-center gap-2">
               <FaRegComment size={24} />
-              <span>{post.comments}</span>
+              <span>Comment</span>
             </button>
           </div>
         </div>

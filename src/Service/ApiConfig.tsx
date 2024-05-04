@@ -7,7 +7,7 @@ export const endpoints = {
   upload_story: "story/create_story/",
   create_post: "/post/create_post/",
   all_post: "/post/",
-  deletePost: (postId: number) => `/post/${postId}/`,
+  deletePost: (postId: number) => `/post/${postId}/deleted_post/`,
   reactPost: (Postid: number) => `/post/${Postid}/reaction/`,
 };
 
