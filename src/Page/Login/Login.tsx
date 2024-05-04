@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { LoginUser } from "../../Redux/apiRequest";
 import { Toaster } from "react-hot-toast";
+import { useState } from "react";
 interface FormValues {
   username: string;
   password: string;
@@ -16,10 +17,12 @@ export const Login = () => {
   };
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [isSubmitting, setIsSubmitting] = useState(false); 
   const handleSubmit = async (
     values: FormValues,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
+   try {
     const newUser = {
       username: values.username,
       password: values.password,
@@ -30,6 +33,13 @@ export const Login = () => {
 
     await LoginUser(newUser, dispatch, navigate);
     setSubmitting(false);
+   } catch (error) {
+      console.log("Login fail");
+      
+   }
+   finally{
+    setIsSubmitting(false);
+   }
   };
 
   const validationSchema = Yup.object({
@@ -73,7 +83,8 @@ export const Login = () => {
           />
           <button
             type="submit"
-            className="w-full md:w-[300px] text-white bg-black p-3 rounded-md mt-2"
+            className={`w-full md:w-[300px] text-white bg-black p-3 rounded-md mt-2 ${isSubmitting} ? "opacity-50 cursor-not-allowed" : ""`}
+            disabled = {isSubmitting}
           >
             Sign in
           </button>

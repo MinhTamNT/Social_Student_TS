@@ -79,7 +79,7 @@ export const Sidebar = ({ isOpen, setIsSidebarOpen }: IProp) => {
             : "hidden md:block md:animate-none animate-slide-out-sidebar"
         }`}
       >
-        <div className="header_close_sidebar md:hidden block ">
+        <div className="header_close_sidebar md:hidden  block ">
           <button
             className="w-[32px] h-[32px] p-2 cursor-pointer hover:opacity-85 md:hidden absolute right-0"
             onClick={handlerCloseMenu}

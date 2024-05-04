@@ -41,18 +41,19 @@ export const PostStory = () => {
   };
 
   return (
-    <div className="flex w-[420px] md:w-[680px] overflow-x-auto  p-2 rounded-md items-center space-x-4">
-      <div className="h-[183px] w-[123px] border rounded-md">
+    <div className="flex w-[420px] md:w-[680px] bg-white shadow-sm overflow-x-auto  p-2 rounded-md items-center space-x-4">
+      
+      <div className=" ml-3 flex items-center gap-5">
+      <div className="h-[183px] w-[113px] border rounded-md">
         <img
           src={user?.avatar_user}
-          className="w-full h-[120px]"
+          className="w-full h-[130px] object-cover rounded-md"
           alt="avatar_user"
         />
         <button className="text-center px-3">
           <span>Create Story</span>
         </button>
       </div>
-      <div className=" ml-3 flex items-center gap-5">
       {stories.length > 0 ? (
         stories.map((story: any) => (
           <div

@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { RootState } from "../../Redux/store";
 
 const menuItems = [
   { name: "See Profile", icon: "👀" },
@@ -8,9 +11,17 @@ const menuItems = [
 
 export const MenuItem = () => {
   const [showSettings, setShowSettings] = useState(false);
+  const user = useSelector((state: RootState) => state.user?.user?.currentUser);
+  const navigate = useNavigate();
 
   const handleSettingsClick = () => {
     setShowSettings(!showSettings);
+  };
+
+  const handleProfileClick = () => {
+    if (user) {
+      navigate(`/profile/${user.username}`);
+    }
   };
 
   return (
@@ -19,7 +30,11 @@ export const MenuItem = () => {
         <div
           key={index}
           onClick={
-            menuItem.name === "Settings" ? handleSettingsClick : undefined
+            menuItem.name === "Settings"
+              ? handleSettingsClick
+              : menuItem.name === "See Profile"
+              ? handleProfileClick
+              : undefined
           }
           className="text-16 cursor-pointer mb-5 md:mb-2 px-1 p-2"
         >

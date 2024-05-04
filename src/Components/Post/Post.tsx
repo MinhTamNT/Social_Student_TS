@@ -79,7 +79,7 @@ export const Post = () => {
   };
 
   return (
-    <section className="md:w-[680px] w-[372px] h-auto mt-2">
+    <section className="md:w-[680px] w-[372px] bg-white h-auto mt-2">
       {allPost.map((post, index) => (
         <div
           key={index}
@@ -92,11 +92,11 @@ export const Post = () => {
                 alt="avatar_user"
                 className="w-10 h-10 rounded-full"
               />
-              <div className="info_user_post flex items-center flex-col">
-                <span className="text-16">{post?.user?.username}</span>
-                <span className="text-13">
+              <div className="info_user_post w-27 flex flex-col">
+                <p className="text-13">{post?.user?.username}</p>
+                <p className="text-13">
                   {moment(post.created_at).fromNow()}
-                </span>
+                </p>
               </div>
             </div>
             {post.user && post.user.id === user?.id && (
@@ -140,7 +140,7 @@ export const Post = () => {
               </>
             )}
           </div>
-          <div className="post_footer flex items-center gap-10 mt-2 px-1">
+          <div className="post_footer flex justify-between items-center gap-10 mt-2 px-1">
             <Tippy
               interactive={true}
               arrow={true}
@@ -178,8 +178,8 @@ export const Post = () => {
               </button>
             </Tippy>
             <button className=" p-2 rounded-md flex items-center gap-2">
-              <FaRegComment size={24} />
               <span>Comment</span>
+              <span>2</span>
             </button>
           </div>
         </div>

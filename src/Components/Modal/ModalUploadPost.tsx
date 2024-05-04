@@ -24,8 +24,8 @@ export const ModalUploadPost = ({ setModalUploadPost }: IProp) => {
   const [contentPost, setContentPost] = useState<string>(
     "Bạn đang nghĩ gì thế?"
   );
-  const [isSubmitting, setIsSubmitting] = useState(false); // Trạng thái đang xử lý đăng bài
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false); // Trạng thái để hiển thị hoặc ẩn emoji picker
+  const [isSubmitting, setIsSubmitting] = useState(false); 
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false); 
   const dispatch = useDispatch();
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
