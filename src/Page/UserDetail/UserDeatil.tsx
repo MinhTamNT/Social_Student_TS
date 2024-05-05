@@ -1,22 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { GrLinkPrevious } from "react-icons/gr";
 import { useNavigate } from "react-router-dom";
 import { FaCamera } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
+import ModalEditUser from "../../Components/Modal/ModalEditUser";
 export const UserDeatil = () => {
   const user = useSelector(
     (state: RootState) => state?.user?.user?.currentUser
   );
-  console.log("====================================");
-  console.log(user);
-  console.log("====================================");
+  const [isModalEdit, setModalEdit] = useState(false);
   const navigate = useNavigate();
   const goBack = () => {
     navigate(-1);
   };
   return (
-    <section className="">
+    <section className="bg-white">
       <div className="header-profile flex justify-between items-center p-2 bg-white shadow-sm ">
         <div className="flex items-center gap-2">
           <button onClick={goBack}>
@@ -46,11 +46,32 @@ export const UserDeatil = () => {
             alt="cover_photo_user"
             className="w-[142px] h-[142px] border-none rounded-full absolute top-12 left-5  "
           />
-           <button className="absolute left-[130px] bottom-[-26px] border p-2 rounded-full bg-slate-200">
+          <button className="absolute left-[130px] bottom-[-26px] border p-2 rounded-full bg-slate-200">
             <FaCamera />
           </button>
         </div>
       </div>
+      <div className="user-detail py-10 flex flex-col px-2">
+        <span className="text-16 font-medium">
+          {user?.first_name}
+          {user?.last_name}
+        </span>
+        <span className="text-16 font-medium">
+          15 <span className="text-gray-500">Friend</span>
+        </span>
+        <div className="action-user-edit w-full mt-2 cursor-pointer">
+          <button
+            className="flex text-white items-center justify-center bg-blue-500 w-full h-9 p-2 rounded-lg"
+            onClick={() => setModalEdit(!isModalEdit)}
+          >
+            <MdEdit size={"24"} />
+            Edit Profile
+          </button>
+        </div>
+      </div>
+      {isModalEdit && (
+        <ModalEditUser setModalEdit={setModalEdit} profile={user} />
+      )}
     </section>
   );
 };

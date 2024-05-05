@@ -13,6 +13,7 @@ import {
   reactPostStart,
   reactPostSuccess,
 } from "./postSlice";
+import { updateError, updateStart } from "./userSlice";
 
 export const LoginUser = async (newUser: any, dispatch: any, navigate: any) => {
   dispatch(loginStart());
@@ -30,6 +31,24 @@ export const LoginUser = async (newUser: any, dispatch: any, navigate: any) => {
   } catch (error) {
     console.log(error);
     dispatch(loginFail());
+  }
+};
+
+export const updateUser = async (
+  newUser: Object,
+  dispatch: any,
+  access_token: string
+) => {
+  dispatch(updateStart());
+  try {
+    const res = await AuthAPI(access_token).put(
+      endpoints["current_user"],
+      newUser
+    );
+    dispatch(updateStart(res.data));
+  } catch (error) {
+    dispatch(updateError());
+    console.log(error);
   }
 };
 export const createPost = async (

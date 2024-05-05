@@ -1,11 +1,12 @@
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { Navigate } from "react-router-dom";
 import {
-  getUserFail,
   getUserStart,
   getUserSucess,
+  updateStart,
+  updateSuccess,
 } from "../../Redux/userSlice";
 import { AuthAPI, endpoints } from "../../Service/ApiConfig";
 
@@ -23,7 +24,7 @@ const ProtectedRoute = ({ children }: IProp) => {
   );
   console.log(isAuth);
   console.log(Date.now());
-  
+
   if (isAuth === null || isAuth?.express_in < Date.now()) {
     return <Navigate to="/login" />;
   }
@@ -31,12 +32,15 @@ const ProtectedRoute = ({ children }: IProp) => {
   useEffect(() => {
     const getUser = async () => {
       dispatch(getUserStart());
+      dispatch(updateStart());
       try {
         const res = await AuthAPI(authUser?.access_token).get(
           endpoints["current_user"]
         );
-        if (res.status === 200) dispatch(getUserSucess(res.data));
-        else return <Navigate to="/login" />;
+        if (res.status === 200) {
+          dispatch(getUserSucess(res.data));
+          dispatch(updateSuccess(res.data));
+        } else return <Navigate to="/login" />;
       } catch (error) {
         return <Navigate to="/login" />;
       }
