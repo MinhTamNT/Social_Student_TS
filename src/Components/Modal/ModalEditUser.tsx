@@ -4,7 +4,7 @@ import { GrFormPreviousLink } from "react-icons/gr";
 import { EditSection } from "../Edit/EditPicture";
 import { InputField } from "../InputFields/InputField";
 import { ModalUploadPicture } from "./ModalUploadPicture";
-
+import { MdOutlineFileUpload } from "react-icons/md";
 interface Profile {
   first_name: string;
   last_name: string;
@@ -51,7 +51,7 @@ const ModalEditUser: React.FC<Props> = ({ setModalEdit, profile }) => {
 
   return (
     <div className="fixed inset-0 flex z-20 justify-center items-center overflow-y-auto bg-black bg-opacity-50">
-      <div className="bg-white w-full h-screen relative">
+      <div className="bg-white w-full md:w-[700px] md:h-[670px] h-screen relative">
         <div className="header-modal-edit shadow-md p-2">
           <button
             className="flex items-center gap-2"
@@ -68,14 +68,31 @@ const ModalEditUser: React.FC<Props> = ({ setModalEdit, profile }) => {
               src={profile.avatar_user}
               onClick={() => setIsEditPicture(!isEditPicture)}
             />
-            <EditSection
-              title="Cover photo"
-              src={profile.cover_photo}
-              onClick={() => setIsEditPicture(!isEditPicture)}
-            />
+            <div className="w-full flex justify-center mt-2 relative border-b-2 p-2">
+              {profile.cover_photo === null ? (
+                <>
+                  <div className="md:w-[500px] w-[320px] h-[183px] rounded-md bg-slate-500 hover:opacity-95 cursor-pointer">
+                    <button className="flex items-center justify-center mx-auto my-20">
+                      <MdOutlineFileUpload size={25} color="white" />
+                      <span className="text-center text-20 text-white">
+                        Update cover Photo
+                      </span>
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <EditSection
+                    title="Cover photo"
+                    src={profile.cover_photo}
+                    onClick={() => setIsEditPicture(!isEditPicture)}
+                  />
+                </>
+              )}
+            </div>
           </div>
 
-          <div className="Information px-2">
+          <div className="Information px- mt-1">
             <div className="user_information">
               {step === 0 && (
                 <>

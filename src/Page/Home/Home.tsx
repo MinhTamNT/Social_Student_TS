@@ -1,20 +1,9 @@
-import { useState, useEffect } from "react";
 import { CreatePost } from "../../Components/Post/CreatePost";
 import { Post } from "../../Components/Post/Post";
 import { PostStory } from "../../Components/Post/PostStory";
+import { useIsMobile } from "../../Hook/useIsMobile";
 export const Home = () => {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const isMobile = useIsMobile();
 
   return (
     <>
