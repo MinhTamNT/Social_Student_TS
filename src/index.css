@@ -12,6 +12,12 @@
    .btn-default {
     @apply w-[32px] h-[32px] p-2 cursor-pointer hover:opacity-85 md:hidden
    }
+   .user-detail {
+    @apply shadow-md p-4  bg-white rounded-md
+   }
+   .flex-box-default {
+    @apply flex  items-center justify-between
+   }
 }
 
 html ::-webkit-scrollbar {

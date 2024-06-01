@@ -11,6 +11,7 @@ import "tippy.js/dist/svg-arrow.css";
 import { Menu } from "../Menu/Menu";
 import { logoutSuccess } from "../../Redux/authSlice";
 import { useNavigate } from "react-router-dom";
+import { Avatar } from "@mui/material";
 interface IProp {
   onMenuClick: () => void;
 }
@@ -30,7 +31,7 @@ export const Header: React.FC<IProp> = ({ onMenuClick }) => {
         <img
           src="https://cdn.haitrieu.com/wp-content/uploads/2021/09/Logo-DH-Mo-TPHCM-OU-V.png"
           alt="logo-webiste"
-          className="h-10 md:flex hidden"
+          className="h-10 md:flex hidden object-cover"
         />
         <button
           className="w-[32px] h-[32px] p-2 cursor-pointer hover:opacity-85 md:hidden"
@@ -67,12 +68,7 @@ export const Header: React.FC<IProp> = ({ onMenuClick }) => {
                     </div>
                   )}
                 >
-                  <img
-                    src={user?.avatar_user}
-                    loading="lazy"
-                    alt="logo_user"
-                    className="w-10 h-10 object-cover cursor-pointer rounded-full hover:opacity-95"
-                  />
+                  <Avatar src={user?.avatar_user} alt="avatar-user" />
                 </Tippy>
                 <Tippy content="Đăng xuất" placement="bottom">
                   <button

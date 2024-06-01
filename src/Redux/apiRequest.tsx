@@ -25,11 +25,10 @@ export const LoginUser = async (newUser: any, dispatch: any, navigate: any) => {
       setTimeout(() => {
         toast.success("Login successfully");
       }, 3000);
-    } else {
-      toast.error("Can you check password or username");
     }
   } catch (error) {
     console.log(error);
+    toast.error("Can you check password or username");
     dispatch(loginFail());
   }
 };

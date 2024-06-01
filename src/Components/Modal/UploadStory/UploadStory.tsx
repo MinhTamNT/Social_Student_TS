@@ -5,7 +5,7 @@ export const UploadStory = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file); // Tạo URL tạm thời cho file hình ảnh
+      const imageUrl = URL.createObjectURL(file); 
       setSelectedFile(imageUrl);
     }
   };

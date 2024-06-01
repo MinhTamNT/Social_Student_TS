@@ -11,6 +11,7 @@ import Picker from "@emoji-mart/react";
 interface IProp {
   setModalUploadPost: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
 export const ModalUploadPost = ({ setModalUploadPost }: IProp) => {
   const user = useSelector(
     (state: RootState) => state?.user?.user?.currentUser
@@ -20,12 +21,11 @@ export const ModalUploadPost = ({ setModalUploadPost }: IProp) => {
   );
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [showUploadArea, setShowUploadArea] = useState(false);
-  const [refreshPosts, setRefreshPosts] = useState(false);
   const [contentPost, setContentPost] = useState<string>(
     "Bạn đang nghĩ gì thế?"
   );
-  const [isSubmitting, setIsSubmitting] = useState(false); 
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false); 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const dispatch = useDispatch();
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,9 +34,7 @@ export const ModalUploadPost = ({ setModalUploadPost }: IProp) => {
       setSelectedFiles((prevFiles) => [...prevFiles, ...Array.from(files)]);
     }
   };
-  const handlePickerOutsideClick = () => {
-    setShowEmojiPicker(false);
-  };
+
   const handleUploadButtonClick = () => {
     setShowUploadArea(true);
   };
@@ -47,13 +45,13 @@ export const ModalUploadPost = ({ setModalUploadPost }: IProp) => {
       input.click();
     }
   };
+
   const addEmoji = (e: any) => {
     const sym = e.unified.split("_");
     const emojiCodePoints: number[] = sym.map((el: string) => parseInt(el, 16));
     const emojiString = emojiCodePoints.map((codePoint: number) =>
       String.fromCodePoint(codePoint)
     );
-    console.log(emojiString);
     setContentPost(contentPost + emojiString);
   };
 
@@ -69,7 +67,6 @@ export const ModalUploadPost = ({ setModalUploadPost }: IProp) => {
     try {
       await createPost(auth?.access_token, formData, dispatch);
       setModalUploadPost(false);
-      setRefreshPosts((prev) => !prev);
     } catch (error) {
       console.error("Đã xảy ra lỗi khi đăng bài viết:", error);
     } finally {
@@ -80,6 +77,7 @@ export const ModalUploadPost = ({ setModalUploadPost }: IProp) => {
   const handlerCloseModal = () => {
     setModalUploadPost(false);
   };
+
   return (
     <div className="fixed inset-0 flex z-20 justify-center items-center bg-black bg-opacity-50 rounded-lg">
       <div className="bg-white rounded-lg p-2 md:w-[500px] w-full h-screen  md:h-auto">
@@ -104,7 +102,7 @@ export const ModalUploadPost = ({ setModalUploadPost }: IProp) => {
             />
             <span className="nameUser">{user?.username}</span>
           </div>
-          <div className="content-input-from-user md:h-[300px] overflow-auto mb-2 relative">
+          <div className="content-input-from-user md:h-[200px] overflow-auto mb-2 relative">
             <textarea
               className="w-full p-2 text-[20px] h-[100px] outline-none"
               placeholder={user.username + contentPost}

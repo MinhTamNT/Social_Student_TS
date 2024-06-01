@@ -7,18 +7,54 @@ import { FaCamera } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import ModalEditUser from "../../Components/Modal/ModalEditUser";
 import { useIsMobile } from "../../Hook/useIsMobile";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
+import { CustomTabPanel } from "../../Components/TabView/CustomTabPanel/CustomTabPanel";
+import { TabsPost } from "../../Components/TabView/Tabs/TabsPost";
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
 export const UserDeatil = () => {
   const user = useSelector(
     (state: RootState) => state?.user?.user?.currentUser
   );
   const [isModalEdit, setIsModalEdit] = useState<boolean>(false);
+  const [value, setValue] = useState(0);
   const isMobile = useIsMobile();
   const navigate = useNavigate();
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
   const goBack = () => {
     navigate(-1);
   };
+
+  const listFrined = [
+    {
+      id: 1,
+      username: "Nguyen Van A",
+      avatar_user:
+        "https://i.pinimg.com/564x/24/21/85/242185eaef43192fc3f9646932fe3b46.jpg",
+    },
+    {
+      id: 2,
+      username: "Nguyen Van C",
+      avatar_user:
+        "https://taimienphi.vn/tmp/cf/aut/UCJh-I6e5-pGG8-5NjT-O83K-mmJy-eZta-9nqH-anh-dai-dien-dep-cute-1.jpg",
+    },
+    {
+      id: 3,
+      username: "Nguyen Van D",
+      avatar_user:
+        "https://i.9mobi.vn/cf/Images/tt/2021/3/15/hinh-anh-dai-dien-dep-dung-cho-facebook-instagram-zalo-9.jpg",
+    },
+  ];
   return (
-    <section className="bg-white md:w-[1095px] h-screen mx-auto relative">
+    <section className=" relative h-screen">
       <div className="header-profile flex justify-between items-center p-2 bg-white shadow-sm md:hidden  ">
         <div className="flex items-center gap-2">
           <button onClick={goBack}>
@@ -31,76 +67,120 @@ export const UserDeatil = () => {
         </div>
         <span className="text-16 text-blue-500">Your personal page</span>
       </div>
-      <div className="picture_user relative ">
-        <div className="cover_picture ">
-          <img
-            src="https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-6/440291400_417378867741407_379319573965574938_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=5f2048&_nc_ohc=BWDAublWt98Q7kNvgFh1ZN_&_nc_ht=scontent.fsgn8-4.fna&oh=00_AfARbAUU_5YvM0oZTRl_EMqwqFxUO-S8rA3XElk_Yi1_qA&oe=663C0AC7"
-            alt="cover_photo_user"
-            className="w-full h-[149px] md:h-[349px] border-none object-cover"
-          />
-          <button className="absolute right-5 bottom-2 border p-2 rounded-full bg-slate-200">
+      <div className="md:w-[1095px] mx-auto">
+        <div className="picture_user relative ">
+          <div className="cover_picture ">
+            <img
+              src="https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-6/440291400_417378867741407_379319573965574938_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=5f2048&_nc_ohc=BWDAublWt98Q7kNvgFh1ZN_&_nc_ht=scontent.fsgn8-4.fna&oh=00_AfARbAUU_5YvM0oZTRl_EMqwqFxUO-S8rA3XElk_Yi1_qA&oe=663C0AC7"
+              alt="cover_photo_user"
+              className="w-full h-[149px] md:h-[349px] border-none object-cover"
+            />
+            <button className="absolute right-5 bottom-2 border p-2 rounded-full bg-slate-200">
+              <FaCamera />
+            </button>
+          </div>
+          <div
+            className={`flex items-center w-full gap-2 absolute left-1 ${
+              isMobile ? "bottom-[-30px]" : "bottom-[-120px]"
+            }`}
+          >
+            <img
+              src={user?.avatar_user}
+              alt="avatar_user"
+              className={`${
+                isMobile ? "h-[128px] w-[128px]" : "w-[168px] h-[168px]"
+              } rounded-full`}
+            />
+            <div className="z-10 md:flex w-full justify-between hidden ">
+              <div className="flex flex-col">
+                <span className="text-16 font-medium">
+                  {user?.first_name}
+                  {user?.last_name}
+                </span>
+                <span className="text-16 font-medium">
+                  15 <span className="text-gray-500">Friend</span>
+                </span>
+              </div>
+
+              <button
+                className="flex text-white items-center mr-2 justify-center bg-blue-500 md:w-[300px] w-full h-9 p-2 rounded-lg"
+                onClick={() => setIsModalEdit(!isModalEdit)}
+              >
+                <MdEdit size={"24"} />
+                Edit Profile
+              </button>
+            </div>
+          </div>
+          <button
+            className={`absolute  ${
+              isMobile ? "left-24" : "bottom-[-110px] left-[120px]"
+            } border p-2 rounded-full bg-slate-200`}
+          >
             <FaCamera />
           </button>
         </div>
-        <div
-          className={`flex items-center w-full gap-2 absolute left-1 ${
-            isMobile ? "bottom-[-30px]" : "bottom-[-120px]"
-          }`}
-        >
-          <img
-            src={user?.avatar_user}
-            alt="avatar_user"
-            className={`${
-              isMobile ? "h-[128px] w-[128px]" : "w-[168px] h-[168px]"
-            } rounded-full`}
-          />
-          <div className="z-10 md:flex w-full justify-between hidden ">
-            <div className="flex flex-col">
-              <span className="text-16 font-medium">
-                {user?.first_name}
-                {user?.last_name}
-              </span>
-              <span className="text-16 font-medium">
-                15 <span className="text-gray-500">Friend</span>
-              </span>
-            </div>
-            <button
-              className="flex text-white items-center mr-2 justify-center bg-blue-500 md:w-[300px] w-full h-9 p-2 rounded-lg"
-              onClick={() => setIsModalEdit(!isModalEdit)}
-            >
-              <MdEdit size={"24"} />
-              Edit Profile
-            </button>
-          </div>
+        <div className="md:pt-[120px] hidden md:block">
+          <Box sx={{ width: "100%" }}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                aria-label="basic tabs example"
+              >
+                <Tab label="Your Post" {...a11yProps(0)} />
+                <Tab label=" Friend" {...a11yProps(1)} />
+              </Tabs>
+            </Box>
+            <CustomTabPanel value={value} index={0}>
+              <TabsPost />
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={1}>
+              Friend
+            </CustomTabPanel>
+          </Box>
         </div>
-        <button
-          className={`absolute  ${
-            isMobile ? "left-24" : "bottom-[-110px] left-[120px]"
-          } border p-2 rounded-full bg-slate-200`}
-        >
-          <FaCamera />
-        </button>
       </div>
+
       {isMobile && (
         <div className="user-detail py-10 flex flex-col px-2">
-          <span className="text-16 font-medium">
-            {user?.first_name}
-            {user?.last_name}
-          </span>
-          <span className="text-16 font-medium">
-            15 <span className="text-gray-500">Friend</span>
-          </span>
-          <div className="action-user-edit w-full flex justify-center mt-2 cursor-pointer">
-            <button
-              className="flex text-white items-center justify-center bg-blue-500 md:w-[500px] w-full h-9 p-2 rounded-lg"
-              onClick={() => setIsModalEdit(!isModalEdit)}
-            >
-              <MdEdit size={"24"} />
-              Edit Profile
-            </button>
+          <>
+            <span className="text-16 font-medium">
+              {user?.first_name}
+              {user?.last_name}
+            </span>
+            <span className="text-16 font-medium">
+              15 <span className="text-gray-500">Friend</span>
+            </span>
+            <div className="action-user-edit w-full flex justify-center mt-2 cursor-pointer">
+              <button
+                className="flex text-white items-center justify-center bg-blue-500 md:w-[500px] w-full h-9 p-2 rounded-lg"
+                onClick={() => setIsModalEdit(!isModalEdit)}
+              >
+                <MdEdit size={"24"} />
+                Edit Profile
+              </button>
+            </div>
+          </>
+          <div className="list-Friend md:pt-20 md:p-2 ư-">
+            <div className="flex-box-default mb-2">
+              <p className=" font-medium text-xl">Friend</p>
+              <p className="text-blue-500 cursor-pointer">Xem tất cả</p>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              {listFrined.map((friend, index) => (
+                <div className="col-span-1">
+                  <img
+                    src={friend.avatar_user}
+                    alt="friend-avatar"
+                    className="rounded-lg h-28"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
+
       {isModalEdit && (
         <ModalEditUser setModalEdit={setIsModalEdit} profile={user} />
       )}

@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { IoTrashBinOutline } from "react-icons/io5";
-import { FaRegComment } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { reactEmojiPost } from "../../Redux/apiRequest";
 import moment from "moment";
@@ -18,28 +17,34 @@ import { AuthAPI, endpoints } from "../../Service/ApiConfig";
 
 export const Post = () => {
   const [refreshPosts, setRefreshPosts] = useState(false);
-  const [isOpenModal, setOpenModal] = useState(false);
-  const [allPost, setAllPost] = useState<any[]>([]); 
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [allPost, setAllPost] = useState<any[]>([]);
 
-  const user = useSelector((state: RootState) => state?.user?.user?.currentUser);
-  const auth = useSelector((state: RootState) => state?.auth?.login?.currentUser);
+  const user = useSelector(
+    (state: RootState) => state?.user?.user?.currentUser
+  );
+  const auth = useSelector(
+    (state: RootState) => state?.auth?.login?.currentUser
+  );
   const dispatch = useDispatch();
 
   const handlerModal = () => {
-    setOpenModal(!isOpenModal);
+    setIsOpenModal(!isOpenModal);
   };
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await AuthAPI(auth?.access_token).get(endpoints["all_post"]);
+        const res = await AuthAPI(auth?.access_token).get(
+          endpoints["all_post"]
+        );
         setAllPost(res.data);
       } catch (error) {
         console.log(error);
       }
     };
     fetchPosts();
-  }, [refreshPosts, auth?.access_token]);
+  }, [refreshPosts]);
 
   const mapReactionToIcon = (reactionType: string) => {
     switch (reactionType) {
@@ -55,7 +60,7 @@ export const Post = () => {
   };
 
   const hasUserReactedToPost = (
-    postId: number,
+    _postId: number,
     userId: number,
     reactions: any[]
   ) => {
@@ -79,7 +84,7 @@ export const Post = () => {
   };
 
   return (
-    <section className="md:w-[680px] w-[372px] bg-white h-auto mt-2">
+    <section className="md:w-[680px] w-full  bg-white h-auto mt-2">
       {allPost.map((post, index) => (
         <div
           key={index}
@@ -94,9 +99,7 @@ export const Post = () => {
               />
               <div className="info_user_post w-27 flex flex-col">
                 <p className="text-13">{post?.user?.username}</p>
-                <p className="text-13">
-                  {moment(post.created_at).fromNow()}
-                </p>
+                <p className="text-13">{moment(post.created_at).fromNow()}</p>
               </div>
             </div>
             {post.user && post.user.id === user?.id && (
@@ -110,7 +113,7 @@ export const Post = () => {
               isOpenModal={isOpenModal}
               postId={post?.id}
               accessToken={auth?.access_token}
-              setOpenModal={setOpenModal}
+              setOpenModal={setIsOpenModal}
               setRefreshPosts={setRefreshPosts}
               refreshPosts={refreshPosts}
             />

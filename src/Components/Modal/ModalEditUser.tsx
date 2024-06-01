@@ -5,6 +5,8 @@ import { EditSection } from "../Edit/EditPicture";
 import { InputField } from "../InputFields/InputField";
 import { ModalUploadPicture } from "./ModalUploadPicture";
 import { MdOutlineFileUpload } from "react-icons/md";
+import { useDispatch } from "react-redux";
+import { useIsMobile } from "../../Hook/useIsMobile";
 interface Profile {
   first_name: string;
   last_name: string;
@@ -20,6 +22,7 @@ interface Props {
 }
 
 const ModalEditUser: React.FC<Props> = ({ setModalEdit, profile }) => {
+  const isMobile = useIsMobile();
   const [step, setStep] = useState<number>(0);
   const [isEditPicture, setIsEditPicture] = useState<boolean>(false);
   const [formData, setFormData] = useState<Profile>({
@@ -30,7 +33,7 @@ const ModalEditUser: React.FC<Props> = ({ setModalEdit, profile }) => {
     avatar_user: profile?.avatar_user,
     cover_photo: profile?.cover_photo,
   });
-
+  const dispatch = useDispatch();
   const handleContinue = () => {
     setStep(step + 1);
   };
@@ -51,7 +54,7 @@ const ModalEditUser: React.FC<Props> = ({ setModalEdit, profile }) => {
 
   return (
     <div className="fixed inset-0 flex z-20 justify-center items-center overflow-y-auto bg-black bg-opacity-50">
-      <div className="bg-white w-full md:w-[700px] md:h-[670px] h-screen relative">
+      <div className="bg-white w-full md:w-[720px] md:h-[680px] h-screen relative">
         <div className="header-modal-edit shadow-md p-2">
           <button
             className="flex items-center gap-2"
@@ -94,57 +97,113 @@ const ModalEditUser: React.FC<Props> = ({ setModalEdit, profile }) => {
 
           <div className="Information px- mt-1">
             <div className="user_information">
-              {step === 0 && (
+              {isMobile ? (
                 <>
-                  <InputField
-                    data={formData?.first_name}
-                    setData={handleChange}
-                    inputType="text"
-                    label="Frist name"
-                    classNameLabel="mb-2"
-                    classNameInput="p-2 border b"
-                    value={formData.first_name}
-                  />
-                  <InputField
-                    data={formData?.last_name}
-                    setData={handleChange}
-                    inputType="text"
-                    label="Email"
-                    classNameLabel="mb-2"
-                    classNameInput="p-2 border b"
-                    value={formData.last_name}
-                  />
-                  <Button variant="contained" onClick={handleContinue}>
-                    <Typography variant="body2">Next</Typography>
-                  </Button>
-                </>
-              )}
-              {step === 1 && (
-                <>
-                  <InputField
-                    data={formData?.username}
-                    setData={handleChange}
-                    inputType="text"
-                    label="Username"
-                    classNameLabel="mb-2"
-                    classNameInput="p-2 border b"
-                    value={formData.username}
-                  />
-                  <InputField
-                    data={formData?.email}
-                    setData={handleChange}
-                    inputType="text"
-                    label="Email"
-                    classNameLabel="mb-2"
-                    classNameInput="p-2 border b"
-                    value={formData.email}
-                  />
+                  {step === 0 && (
+                    <>
+                      <InputField
+                        data={formData?.first_name}
+                        setData={handleChange}
+                        inputType="text"
+                        label="Frist name"
+                        classNameLabel="mb-2"
+                        classNameInput="p-2 border b"
+                        value={formData.first_name}
+                      />
+                      <InputField
+                        data={formData?.last_name}
+                        setData={handleChange}
+                        inputType="text"
+                        label="Email"
+                        classNameLabel="mb-2"
+                        classNameInput="p-2 border b"
+                        value={formData.last_name}
+                      />
+                      <Button variant="contained" onClick={handleContinue}>
+                        <Typography variant="body2">Next</Typography>
+                      </Button>
+                    </>
+                  )}
+                  {step === 1 && (
+                    <>
+                      <InputField
+                        data={formData?.username}
+                        setData={handleChange}
+                        inputType="text"
+                        label="Username"
+                        classNameLabel="mb-2"
+                        classNameInput="p-2 border b"
+                        value={formData.username}
+                      />
+                      <InputField
+                        data={formData?.email}
+                        setData={handleChange}
+                        inputType="text"
+                        label="Email"
+                        classNameLabel="mb-2"
+                        classNameInput="p-2 border b"
+                        value={formData.email}
+                      />
 
-                  <Button variant="contained" onClick={handleSubmit}>
-                    <Typography variant="body2">Submit</Typography>
-                  </Button>
-                  <Button variant="text" onClick={handleBack}>
-                    <Typography variant="body2">Back</Typography>
+                      <Button variant="contained" onClick={handleSubmit}>
+                        <Typography variant="body2">Update</Typography>
+                      </Button>
+                      <Button variant="text" onClick={handleBack}>
+                        <Typography variant="body2">Back</Typography>
+                      </Button>
+                    </>
+                  )}
+                </>
+              ) : (
+                <>
+                  <div className="grid grid-cols-2">
+                    <InputField
+                      data={formData?.first_name}
+                      setData={handleChange}
+                      inputType="text"
+                      label="Frist name"
+                      classNameLabel="mb-2"
+                      classNameInput="p-2 border b w-[300px] rounded-lg"
+                      value={formData.first_name}
+                    />
+                    <InputField
+                      data={formData?.last_name}
+                      setData={handleChange}
+                      inputType="text"
+                      label="Last Name"
+                      classNameLabel="mb-2"
+                      classNameInput="p-2 border b w-[300px] rounded-lg"
+                      value={formData.last_name}
+                    />
+                    <InputField
+                      data={formData?.username}
+                      setData={handleChange}
+                      inputType="text"
+                      label="Username"
+                      classNameLabel="mb-2"
+                      classNameInput="p-2 border b w-[300px] rounded-lg"
+                      value={formData.username}
+                    />
+                    <InputField
+                      data={formData?.email}
+                      setData={handleChange}
+                      inputType="text"
+                      label="Email"
+                      classNameLabel="mb-2"
+                      classNameInput="p-2 border b w-[300px] rounded-lg"
+                      value={formData.email}
+                    />
+                  </div>
+                  <Button
+                    variant="contained"
+                    style={{
+                      display: "flex",
+                      justifyContent: "end",
+                      alignItems: "end",
+                    }}
+                    onClick={handleSubmit}
+                  >
+                    <Typography variant="body2">Update</Typography>
                   </Button>
                 </>
               )}
