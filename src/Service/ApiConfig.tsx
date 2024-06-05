@@ -7,7 +7,7 @@ export const endpoints = {
   upload_story: "story/create_story/",
   create_post: "/post/create_post/",
   all_post: "/post/",
-  deletePost: (postId: number) => `/post/${postId}/deleted_post/`,
+  deletePost: (postId: number) => `/post/${postId}/`,
   reactPost: (Postid: number) => `/post/${Postid}/reaction/`,
 };
 
@@ -20,7 +20,6 @@ export const AuthAPI = (accessToken: string): AxiosInstance => {
     },
   });
 };
-console.log(import.meta.env.VITE_LOCAL_HOST_URL);
 
 export const API: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_LOCAL_HOST_URL,

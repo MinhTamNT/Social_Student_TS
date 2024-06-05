@@ -3,13 +3,18 @@ import { RootState } from "../../Redux/store";
 import { CiImageOn } from "react-icons/ci";
 import { useState } from "react";
 import { ModalUploadPost } from "../Modal/ModalUploadPost";
-export const CreatePost = () => {
+
+interface CreatePostProps {
+  setRefreshPosts: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const CreatePost: React.FC<CreatePostProps> = ({ setRefreshPosts }) => {
   const user = useSelector(
     (state: RootState) => state?.user?.user?.currentUser
   );
-  const [isModalUploadPost, setModalUploadPost] = useState(false);
+  const [isModalUploadPost, setIsModalUploadPost] = useState<boolean>(false);
   const handlerOpenUploadPost = () => {
-    setModalUploadPost(!isModalUploadPost);
+    setIsModalUploadPost(!isModalUploadPost);
   };
   return (
     <>
@@ -36,7 +41,10 @@ export const CreatePost = () => {
         </div>
       </div>
       {isModalUploadPost && (
-        <ModalUploadPost setModalUploadPost={setModalUploadPost} />
+        <ModalUploadPost
+          setModalUploadPost={setIsModalUploadPost}
+          setRefreshPosts={setRefreshPosts}
+        />
       )}
     </>
   );

@@ -25,7 +25,7 @@ const ProtectedRoute = ({ children }: IProp) => {
   console.log(isAuth);
   console.log(Date.now());
 
-  if (isAuth === null || isAuth?.express_in < Date.now()) {
+  if (authUser === null) {
     return <Navigate to="/login" />;
   }
 

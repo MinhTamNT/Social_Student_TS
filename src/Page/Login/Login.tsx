@@ -94,7 +94,7 @@ export const Login = () => {
           ))}
           <button
             type="submit"
-            className={`w-full md:w-[300px] text-white bg-black p-3 rounded-md mt-2 ${
+            className={`w-[300px] text-white bg-black p-3 rounded-md mt-2 ${
               isSubmitting ? "opacity-50 cursor-not-allowed" : ""
             }`}
             disabled={isSubmitting}
