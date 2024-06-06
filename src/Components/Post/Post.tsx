@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
-import { IoTrashBinOutline } from "react-icons/io5";
-import moment from "moment";
-import Tippy from "@tippyjs/react/headless";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/dist/svg-arrow.css";
 import { SlLike } from "react-icons/sl";
-import { FacebookSelector } from "@charkour/react-reactions";
 import { FcLike } from "react-icons/fc";
 import { FaRegFaceLaughSquint } from "react-icons/fa6";
 import { ModalDeletedPost } from "../Modal/ModalDeletedPost";
 import { AuthAPI, endpoints } from "../../Service/ApiConfig";
 import { reactEmojiPost } from "../../Redux/apiRequest";
-import { log } from "console";
-
+import PostHeader from "./PostHeader";
+import PostContent from "./PostContent";
+import ReactionSelector from "./ReactionPost";
+import ModalPostDetail from "../Modal/ModaLPostDetail";
+import { IoTrashBinOutline } from "react-icons/io5";
 interface PostProps {
   refreshPosts: boolean;
   setRefreshPosts: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,7 +24,9 @@ export const Post: React.FC<PostProps> = ({
   setRefreshPosts,
 }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [isOpenModalDelatil, setIsOpenModalDelatil] = useState<boolean>(false);
   const [allPost, setAllPost] = useState<any[]>([]);
+  const [selectedPost, setSelectedPost] = useState<any>(null);
 
   const user = useSelector(
     (state: RootState) => state?.user?.user?.currentUser
@@ -37,6 +38,10 @@ export const Post: React.FC<PostProps> = ({
 
   const handlerModal = () => {
     setIsOpenModal(!isOpenModal);
+  };
+  const handlePostDetail = (post: any) => {
+    setSelectedPost(post);
+    setIsOpenModalDelatil(true);
   };
 
   useEffect(() => {
@@ -97,19 +102,7 @@ export const Post: React.FC<PostProps> = ({
           className="w-full mb-4 border rounded-md p-4 hover:bg-[#F9F9F9]"
         >
           <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <img
-                src={post?.user?.avatar_user}
-                alt="avatar_user"
-                className="w-10 h-10 rounded-full"
-              />
-              <div className="flex flex-col">
-                <p className="text-sm font-semibold">{post?.user?.username}</p>
-                <p className="text-xs text-gray-500">
-                  {moment(post.created_at).fromNow()}
-                </p>
-              </div>
-            </div>
+            <PostHeader user={user} post={post} handlerModal={handlerModal} />
             {post.user && post.user.id === user?.id && (
               <div>
                 <button onClick={handlerModal}>
@@ -126,81 +119,31 @@ export const Post: React.FC<PostProps> = ({
               refreshPosts={refreshPosts}
             />
           </div>
-          <div className="mt-4">
-            {post.media_file.length === 0 ? (
-              <div className="flex items-center justify-center  bg-gray-200 rounded-md p-4 overflow-hidden">
-                <p className="text-lg text-gray-700 break-words overflow-wrap">
-                  {post.content}
-                </p>
-              </div>
-            ) : (
-              <>
-                <p className="text-sm text-gray-700 mb-4 break-words overflow-wrap">
-                  {post.content}
-                </p>
-                <div
-                  className={`grid gap-4 ${
-                    post.media_file.length > 1 ? "grid-cols-2" : "grid-cols-1"
-                  }`}
-                >
-                  {post.media_file.map((imagePost: string) => (
-                    <img
-                      src={imagePost}
-                      alt="image_post"
-                      key={imagePost}
-                      className="rounded-md object-cover w-full"
-                    />
-                  ))}
-                </div>
-              </>
-            )}
-          </div>
+          <PostContent post={post} />
           <div className="post_footer flex justify-between items-center gap-2 md:gap-10 mt-4 px-1">
-            <Tippy
-              interactive={true}
-              arrow={true}
-              placement="top-end"
-              render={(attrs) => (
-                <div {...attrs} tabIndex={-1}>
-                  <div className="tippy-content">
-                    <FacebookSelector
-                      reactions={["like", "love", "haha"]}
-                      onSelect={(reaction) =>
-                        handleReactionClick(post.id, reaction)
-                      }
-                    />
-                  </div>
-                </div>
-              )}
+            <ReactionSelector
+              post={post}
+              user={user}
+              handleReactionClick={handleReactionClick}
+              hasUserReactedToPost={hasUserReactedToPost}
+              mapReactionToIcon={mapReactionToIcon}
+            />
+            <button
+              className="footer-post"
+              onClick={() => handlePostDetail(post)}
             >
-              <button className="p-2 rounded-md flex items-center gap-2 bg-gray-100 hover:bg-gray-200">
-                {post.react}
-                {hasUserReactedToPost(post.id, user?.id, post.reaction) ? (
-                  <>
-                    {post.reaction.map((reaction: any) => {
-                      return mapReactionToIcon(reaction.reaction_type);
-                    })}
-                  </>
-                ) : (
-                  <>
-                    <SlLike size={24} />
-                  </>
-                )}
-
-                <span className="text-sm">
-                  {post.reaction.map((title: any) => (
-                    <span key={title?.id}>{title?.reaction_type}</span>
-                  ))}
-                </span>
-              </button>
-            </Tippy>
-            <button className="p-2 rounded-md flex items-center gap-2 bg-gray-100 hover:bg-gray-200">
               <span className="text-sm">Comment</span>
-              <span className="text-sm">2</span>
             </button>
           </div>
         </div>
       ))}
+      {isOpenModalDelatil && (
+        <ModalPostDetail
+          post={selectedPost}
+          closeModal={() => setIsOpenModalDelatil(false)}
+          setRefreshPosts={setRefreshPosts}
+        />
+      )}
     </section>
   );
 };

@@ -21,7 +21,6 @@ export const ModalDeletedPost = ({
   setRefreshPosts,
   refreshPosts,
 }: IProp) => {
-  
   const style = {
     position: "absolute",
     top: "50%",
