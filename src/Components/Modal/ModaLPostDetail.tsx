@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PostHeader from "../Post/PostHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
@@ -7,9 +7,15 @@ import ReactionSelector from "../Post/ReactionPost";
 import { SlLike } from "react-icons/sl";
 import { FcLike } from "react-icons/fc";
 import { FaRegFaceLaughSquint } from "react-icons/fa6";
-import { reactEmojiPost } from "../../Redux/apiRequest";
+import { commentPost, reactEmojiPost } from "../../Redux/apiRequest";
 import { IoMdClose } from "react-icons/io";
-
+import { AuthAPI, endpoints } from "../../Service/ApiConfig";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import IconButton from "@mui/material/IconButton";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 interface ReactionType {
   id: number;
   user_id: number;
@@ -25,8 +31,8 @@ interface PostType {
 
 interface CommentType {
   id: number;
-  user: { id: number; name: string; avatar: string };
-  content: string;
+  user: { id: number; username: string; avatar_user: string };
+  comment: string;
 }
 
 interface ModalPostDetailProps {
@@ -48,19 +54,26 @@ const ModalPostDetail: React.FC<ModalPostDetailProps> = ({
   );
   const dispatch = useDispatch();
   const [newComment, setNewComment] = useState("");
+  const [comments, setComments] = useState<CommentType[]>([]);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedComment, setSelectedComment] = useState<CommentType | null>(
+    null
+  );
 
-  const dummyComments: CommentType[] = [
-    {
-      id: 1,
-      user: { id: 1, name: "Jane Doe", avatar: "https://via.placeholder.com/40" },
-      content: "This is a great post!",
-    },
-    {
-      id: 2,
-      user: { id: 2, name: "John Smith", avatar: "https://via.placeholder.com/40" },
-      content: "Thanks for sharing!",
-    },
-  ];
+  const fetchComments = async () => {
+    try {
+      const res = await AuthAPI(auth?.access_token).get(
+        endpoints["get-comment-post"](post?.id)
+      );
+      setComments(res.data);
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchComments();
+  }, [post?.id, auth?.access_token]);
 
   const mapReactionToIcon = (reactionType: string) => {
     switch (reactionType) {
@@ -75,7 +88,6 @@ const ModalPostDetail: React.FC<ModalPostDetailProps> = ({
     }
   };
 
-
   const handleReactionClick = async (postId: number, reactType: string) => {
     try {
       await reactEmojiPost(postId, auth?.access_token, dispatch, {
@@ -87,19 +99,57 @@ const ModalPostDetail: React.FC<ModalPostDetailProps> = ({
     }
   };
 
-  const handleCommentSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    const newCommentObj: CommentType = {
-      id: dummyComments.length + 1,
-      user: { id: user.id, name: user.name, avatar: user.avatar },
-      content: newComment,
-    };
-    dummyComments.push(newCommentObj);
-    setNewComment("");
+  const handleCommentSubmit = async (postId: number) => {
+    try {
+      const newCommentData = { comment: newComment };
+      await commentPost(postId, auth?.access_token, newCommentData, dispatch);
+      setNewComment("");
+      fetchComments();
+    } catch (error) {
+      console.error("Error posting comment:", error);
+    }
   };
 
-  const handleRemoveTheReaction = () => {
-    console.log("hello");
+  const handleRemoveTheReaction = async () => {
+    try {
+      await reactEmojiPost(post.id, auth?.access_token, dispatch, {
+        reaction_type: null,
+      });
+      setRefreshPosts((prev) => !prev);
+    } catch (error) {
+      console.error("Error removing reaction:", error);
+    }
+  };
+
+  const handleMenuOpen = (
+    event: React.MouseEvent<HTMLElement>,
+    comment: CommentType
+  ) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedComment(comment);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedComment(null);
+  };
+
+  const handleDeleteComment = async (commentId: number) => {
+    try {
+      await AuthAPI(auth.access_token).delete(
+        endpoints["deleted-comment"](commentId)
+      );
+    } catch (error) {
+      console.log(error);
+    }
+    fetchComments();
+    handleMenuClose();
+  };
+
+  const handleEditComment = (commentId: number) => {
+    console.log(commentId);
+
+    handleMenuClose();
   };
 
   return (
@@ -126,28 +176,36 @@ const ModalPostDetail: React.FC<ModalPostDetailProps> = ({
                 mapReactionToIcon={mapReactionToIcon}
                 handleReactionRemove={handleRemoveTheReaction}
               />
-              <p>{post.likes} likes</p>
+              <p>{post.reaction.length} likes</p>
             </div>
           </div>
-          <div className="mt-4">
+          <div className="mt-4 overflow-auto">
             <h2 className="text-xl font-semibold mb-2">Comments</h2>
-            <div className="space-y-4">
-              {dummyComments.map((comment) => (
+            <div className="space-y-4 mb-3">
+              {comments.map((comment) => (
                 <div key={comment.id} className="flex items-start space-x-4">
                   <img
-                    src={comment.user.avatar}
-                    alt={comment.user.name}
+                    src={comment.user.avatar_user}
+                    alt={comment.user.username}
                     className="w-10 h-10 rounded-full"
                   />
                   <div className="flex-1">
-                    <p className="font-semibold">{comment.user.name}</p>
-                    <p className="text-gray-600">{comment.content}</p>
+                    <p className="font-semibold">{comment.user.username}</p>
+                    <p className="text-gray-600">{comment.comment}</p>
                   </div>
+                  <IconButton
+                    aria-label="more"
+                    aria-controls="long-menu"
+                    aria-haspopup="true"
+                    onClick={(e) => handleMenuOpen(e, comment)}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
                 </div>
               ))}
             </div>
             {user ? (
-              <form onSubmit={handleCommentSubmit} className="mt-4">
+              <>
                 <textarea
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
@@ -155,18 +213,41 @@ const ModalPostDetail: React.FC<ModalPostDetailProps> = ({
                   className="w-full border border-gray-300 rounded-md p-2 resize-none focus:outline-none focus:ring focus:ring-blue-500"
                 ></textarea>
                 <button
-                  type="submit"
+                  onClick={() => handleCommentSubmit(post.id)}
                   className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-300"
                 >
                   Post Comment
                 </button>
-              </form>
+              </>
             ) : (
               <p className="mt-4 text-gray-600">Đăng nhập để bình luận.</p>
             )}
           </div>
         </div>
       </div>
+
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+      >
+        <MenuItem
+          onClick={() =>
+            selectedComment && handleEditComment(selectedComment.id)
+          }
+        >
+          <EditIcon fontSize="small" />
+          Edit
+        </MenuItem>
+        <MenuItem
+          onClick={() =>
+            selectedComment && handleDeleteComment(selectedComment.id)
+          }
+        >
+          <DeleteIcon fontSize="small" />
+          Delete
+        </MenuItem>
+      </Menu>
     </div>
   );
 };

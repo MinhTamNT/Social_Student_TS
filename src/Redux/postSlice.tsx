@@ -10,6 +10,7 @@ interface PostState {
   };
   onePost: {
     post: any[];
+    comments: any[];
     pending: boolean;
     error: boolean;
   };
@@ -37,6 +38,7 @@ const initialState: PostState = {
   },
   onePost: {
     post: [],
+    comments: [],
     pending: false,
     error: false,
   },
@@ -76,6 +78,17 @@ export const postSlice = createSlice({
       state.onePost.post = action.payload;
     },
     getOnePostFailed: (state) => {
+      state.onePost.error = true;
+    },
+    CommentPostStart: (state) => {
+      state.onePost.pending = true;
+    },
+    CommentPostSuccess: (state, action) => {
+      state.onePost.pending = false;
+      state.onePost.comments = action.payload;
+    },
+    CommentPostFail: (state) => {
+      state.onePost.pending = false;
       state.onePost.error = true;
     },
     createPostStart: (state) => {
@@ -146,5 +159,8 @@ export const {
   deleteReactionPostStart,
   deleteReactionPostFailed,
   deleteReactionPostSuccess,
+  CommentPostFail,
+  CommentPostStart,
+  CommentPostSuccess,
 } = postSlice.actions;
 export default postSlice.reducer;

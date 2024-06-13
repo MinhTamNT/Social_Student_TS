@@ -9,6 +9,9 @@ import {
   registerSuccess,
 } from "./authSlice";
 import {
+  CommentPostFail,
+  CommentPostStart,
+  CommentPostSuccess,
   createPostFailed,
   createPostStart,
   createPostSuccess,
@@ -180,5 +183,24 @@ export const deletedPostReaction = async (
   } catch (error) {
     console.log(error);
     dispatch(deleteReactionPostFailed());
+  }
+};
+
+export const commentPost = async (
+  postId: number,
+  access_token: string,
+  newComment: any,
+  dispatch: any
+) => {
+  dispatch(CommentPostStart());
+  try {
+    const res = await AuthAPI(access_token).post(
+      endpoints["comment-post"](postId),
+      newComment
+    );
+    dispatch(CommentPostSuccess(res.data));
+  } catch (error) {
+    console.log(error);
+    dispatch(CommentPostFail());
   }
 };

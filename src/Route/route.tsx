@@ -1,4 +1,5 @@
 import { config } from "../Config";
+import { ErrorPage } from "../Page/Error/ErrorPage";
 import { Home } from "../Page/Home/Home";
 import { Login } from "../Page/Login/Login";
 import { Register } from "../Page/Register/Register";
@@ -24,5 +25,10 @@ export const RouteSocial = [
     component: UserDeatil,
     layout: null,
     isAuthencatied: true,
+  },
+  {
+    path: "*",
+    component: ErrorPage,
+    layout: null,
   },
 ];

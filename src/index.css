@@ -8,6 +8,21 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+html ::-webkit-scrollbar {
+  border-radius: 0px;
+  width: 2px;
+}
+
+html *::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+html *::-webkit-scrollbar-track {
+  border-radius: 0;
+  background-color: rgba(0, 0, 0, 0);
+}
+
 @layer components{
    .btn-default {
     @apply w-[32px] h-[32px] p-2 cursor-pointer hover:opacity-85 md:hidden
@@ -23,16 +38,3 @@
    }
 }
 
-html ::-webkit-scrollbar {
-  border-radius: 0px;
-  width: 2px;
-}
-
-html *::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  background-color: rgba(0, 0, 0, 0.15);
-}
-html *::-webkit-scrollbar-track {
-  border-radius: 0;
-  background-color: rgba(0, 0, 0, 0);
-}
