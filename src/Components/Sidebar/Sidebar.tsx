@@ -78,7 +78,7 @@ export const Sidebar = ({ isOpen, setIsSidebarOpen }: IProp) => {
         ></div>
       )}
       <div
-        className={`md:fixed z-30 absolute top-10 ${
+        className={`md:fixed z-30 absolute md:top-10 top-0 ${
           isMobile
             ? "w-[70%] h-screen z-10 bg-white"
             : "w-[272px] rounded-lg px-5 py-3"

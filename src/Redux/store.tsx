@@ -7,6 +7,7 @@ import {
 import authReducer from "./authSlice";
 import userReducer from "./userSlice";
 import postReducer from "./postSlice";
+import commentReducer from "./commentSlice";
 import {
   persistStore,
   persistReducer,
@@ -19,7 +20,7 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { ThunkAction } from "redux-thunk";
-
+import { useDispatch } from "react-redux";
 export type RootState = ReturnType<typeof combinedReducer>;
 
 const persistConfig = {
@@ -33,6 +34,7 @@ const combinedReducer = combineReducers({
   auth: authReducer,
   user: userReducer,
   post: postReducer,
+  comments: commentReducer,
 });
 
 const rootReducer = (state: RootState | undefined, action: Action) => {
@@ -50,11 +52,14 @@ export const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        isSerializable: () => true,
       },
     }),
 });
 
 export const persistor = persistStore(store);
+export type AppDispatch = typeof store.dispatch;
+export const useAppDispatch = () => useDispatch<AppDispatch>();
 
 export type AppThunk<ReturnType = void> = ThunkAction<
   ReturnType,
