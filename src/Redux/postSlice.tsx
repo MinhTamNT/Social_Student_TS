@@ -114,6 +114,17 @@ export const postSlice = createSlice({
       state.reactPost.pending = false;
       state.reactPost.error = true;
     },
+    deleteReactionPostStart: (state) => {
+      state.deletePost.pending = true;
+    },
+    deleteReactionPostSuccess: (state) => {
+      state.deletePost.pending = false;
+      state.deletePost.error = false;
+    },
+    deleteReactionPostFailed: (state) => {
+      state.deletePost.error = true;
+      state.deletePost.pending = false;
+    },
   },
 });
 
@@ -132,5 +143,8 @@ export const {
   reactPostStart,
   reactPostFailed,
   reactPostSuccess,
+  deleteReactionPostStart,
+  deleteReactionPostFailed,
+  deleteReactionPostSuccess,
 } = postSlice.actions;
 export default postSlice.reducer;

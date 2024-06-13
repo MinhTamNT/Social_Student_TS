@@ -1,9 +1,12 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../Components/Button/Button";
 import { CiCamera } from "react-icons/ci";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useDispatch } from "react-redux";
+import { RegisterUser } from "../../Redux/apiRequest";
+import { Loading } from "../../Components/LoadingPage/LoadingPage";
 
 interface FormValues {
   [key: string]: string;
@@ -17,8 +20,9 @@ interface FieldConfig {
 
 export const Register = () => {
   const navigate = useNavigate();
-  const [imageUser, setImageUser] = useState<string | null>(null);
-
+  const [imageUser, setImageUser] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const dispatch = useDispatch();
   const initialValues: FormValues = {
     firstName: "",
     lastName: "",
@@ -43,43 +47,39 @@ export const Register = () => {
       .required("Confirm Password is required"),
   });
 
-  const handleSignUp = (values: FormValues) => {
-    console.log(values);
+  const handleSignUp = async (values: FormValues) => {
+    setIsLoading(true);
+    try {
+      const form = new FormData();
+      form.append("first_name", values.firstName);
+      form.append("last_name", values.lastName);
+      form.append("username", values.username);
+      form.append("email", values.email);
+      form.append("password", values.password);
+      if (imageUser) {
+        form.append("avatar", imageUser);
+      }
+      await RegisterUser(form, dispatch, navigate);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const selectedImage = event.target.files[0];
-      setImageUser(URL.createObjectURL(selectedImage));
+      setImageUser(selectedImage);
     }
   };
 
   const formFields: FieldConfig[] = [
-    {
-      name: "firstName",
-      placeholder: "First Name",
-      type: "text",
-    },
-    {
-      name: "lastName",
-      placeholder: "Last Name",
-      type: "text",
-    },
-    {
-      name: "username",
-      placeholder: "Username",
-      type: "text",
-    },
-    {
-      name: "email",
-      placeholder: "Email",
-      type: "text",
-    },
-    {
-      name: "password",
-      placeholder: "Password",
-      type: "password",
-    },
+    { name: "firstName", placeholder: "First Name", type: "text" },
+    { name: "lastName", placeholder: "Last Name", type: "text" },
+    { name: "username", placeholder: "Username", type: "text" },
+    { name: "email", placeholder: "Email", type: "text" },
+    { name: "password", placeholder: "Password", type: "password" },
     {
       name: "confirmPassword",
       placeholder: "Confirm Password",
@@ -89,12 +89,13 @@ export const Register = () => {
 
   return (
     <div className="flex justify-center items-center h-screen">
+      {isLoading && <Loading />}
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={handleSignUp}
       >
-        <Form className="w-full md:w-[550px] md:h-[750px] md:shadow-md flex flex-col justify-center items-center  h-full">
+        <Form className="w-full md:w-[550px] md:h-[750px] md:shadow-md flex flex-col justify-center items-center h-full">
           <h1 className="font-bold text-[30px] md:m-2 md:ml-5 md:text-left text-center uppercase">
             Sign Up
           </h1>
@@ -113,7 +114,7 @@ export const Register = () => {
               <img
                 src={
                   imageUser
-                    ? imageUser
+                    ? URL.createObjectURL(imageUser)
                     : "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/profile-design-template-4c23db68ba79c4186fbd258aa06f48b3_screen.jpg?ts=1581063859"
                 }
                 alt="Upload"
@@ -121,7 +122,7 @@ export const Register = () => {
               />
               <CiCamera
                 size={32}
-                className="bottom-0 right-2  cursor-pointer absolute"
+                className="bottom-0 right-2 cursor-pointer absolute"
               />
             </label>
           </div>

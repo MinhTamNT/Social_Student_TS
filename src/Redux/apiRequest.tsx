@@ -1,12 +1,20 @@
 import toast from "react-hot-toast";
 import { API, AuthAPI, endpoints } from "../Service/ApiConfig";
-import { loginFail, loginStart, loginSucces } from "./authSlice";
+import {
+  loginFail,
+  loginStart,
+  loginSucces,
+  registerFail,
+  registerStart,
+  registerSuccess,
+} from "./authSlice";
 import {
   createPostFailed,
   createPostStart,
   createPostSuccess,
   deletePostStart,
   deletePostSuccess,
+  deleteReactionPostFailed,
   getAllPostStart,
   getAllPostSuccess,
   reactPostFailed,
@@ -14,6 +22,41 @@ import {
   reactPostSuccess,
 } from "./postSlice";
 import { updateError, updateStart } from "./userSlice";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebaseConfgic";
+
+export const RegisterUser = async (
+  newUser: FormData,
+  dispatch: any,
+  navigate: any
+) => {
+  dispatch(registerStart());
+  try {
+    const res = await API.post(endpoints["register-user"], newUser, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    // Extract email and password from FormData
+    const email = newUser.get("email") as string;
+    const password = newUser.get("password") as string;
+
+    // Log the extracted values for debugging
+    console.log(email);
+    console.log(password);
+
+    // Register the user with Firebase Authentication
+    await createUserWithEmailAndPassword(auth, email, password);
+
+    // Dispatch success action and navigate to login page
+    dispatch(registerSuccess(res.data));
+    navigate("/login");
+  } catch (error) {
+    console.log(error);
+    dispatch(registerFail());
+  }
+};
 
 export const LoginUser = async (newUser: any, dispatch: any, navigate: any) => {
   dispatch(loginStart());
@@ -122,5 +165,20 @@ export const reactEmojiPost = async (
   } catch (error) {
     dispatch(reactPostFailed());
     console.log(error);
+  }
+};
+
+export const deletedPostReaction = async (
+  reactionId: number,
+  access_token: string,
+  dispatch: any
+) => {
+  try {
+    const res = await AuthAPI(access_token).delete(
+      endpoints.deleteReaction(reactionId)
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(deleteReactionPostFailed());
   }
 };

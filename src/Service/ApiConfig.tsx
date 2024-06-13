@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 
 export const endpoints = {
+  "register-user": "/account/former/register/",
   login: "o/token/",
   current_user: "user/current-user/",
   get_story: "story/",
@@ -9,6 +10,7 @@ export const endpoints = {
   all_post: "/post/",
   deletePost: (postId: number) => `/post/${postId}/`,
   reactPost: (Postid: number) => `/post/${Postid}/reaction/`,
+  deleteReaction: (reactionId: number) => `/post/${reactionId}/reaction`,
 };
 
 export const AuthAPI = (accessToken: string): AxiosInstance => {

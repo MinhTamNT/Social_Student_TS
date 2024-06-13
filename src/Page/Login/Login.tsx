@@ -57,7 +57,7 @@ export const Login = () => {
       setSubmitting(false);
     } catch (error) {
       console.log("Login fail");
-      toast.error("Can you you check password or username")
+      toast.error("Can you you check password or username");
     } finally {
       setIsSubmitting(false);
       setIsLoading(false);

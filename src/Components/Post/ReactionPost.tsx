@@ -1,25 +1,55 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Tippy from "@tippyjs/react/headless";
 import { FacebookSelector } from "@charkour/react-reactions";
 import { SlLike } from "react-icons/sl";
 
-const ReactionSelector: React.FC<{
-  post: any;
-  user: any;
+interface Reaction {
+  id: number;
+  user_id: number;
+  reaction_type: string;
+}
+
+interface User {
+  id: number;
+}
+
+interface Post {
+  id: number;
+  react: string;
+  reaction: Reaction[];
+}
+
+interface ReactionSelectorProps {
+  post: Post;
+  user: User;
   handleReactionClick: (postId: number, reactType: string) => void;
-  hasUserReactedToPost: (
-    postId: number,
-    userId: number,
-    reactions: any[]
-  ) => boolean;
+  handleReactionRemove : (postId: number) => void;
   mapReactionToIcon: (reactionType: string) => JSX.Element | null;
-}> = ({
+}
+
+const ReactionSelector: React.FC<ReactionSelectorProps> = ({
   post,
   user,
   handleReactionClick,
-  hasUserReactedToPost,
+  handleReactionRemove,
   mapReactionToIcon,
 }) => {
+  const [userReaction, setUserReaction] = useState<Reaction | null>(null);
+
+  useEffect(() => {
+    const reaction = post.reaction.find((reaction) => reaction.user_id === user.id);
+    setUserReaction(reaction || null);
+  }, [post.reaction, user.id]);
+
+  const handleButtonClick = () => {
+    if (userReaction) {
+      handleReactionRemove(post.id); // Gọi API huỷ reaction
+      setUserReaction(null); // Cập nhật trạng thái sau khi huỷ
+    } else {
+      // Open reaction selector
+    }
+  };
+
   return (
     <Tippy
       interactive={true}
@@ -30,31 +60,29 @@ const ReactionSelector: React.FC<{
           <div className="tippy-content">
             <FacebookSelector
               reactions={["like", "love", "haha"]}
-              onSelect={(reaction) => handleReactionClick(post.id, reaction)}
+              onSelect={(reaction) => {
+                handleReactionClick(post.id, reaction);
+                setUserReaction({ id: Date.now(), user_id: user.id, reaction_type: reaction });
+              }}
             />
           </div>
         </div>
       )}
     >
-      <button className="p-2 rounded-md flex items-center gap-2 bg-gray-100 hover:bg-gray-200">
-        {post.react}
-        {hasUserReactedToPost(post.id, user?.id, post.reaction) ? (
-          <>
-            {post.reaction.map((reaction: any) => {
-              return mapReactionToIcon(reaction.reaction_type);
-            })}
-          </>
+      <button
+        className="p-2 rounded-md flex items-center gap-2 bg-gray-100 hover:bg-gray-200"
+        onClick={handleButtonClick}
+      >
+        {userReaction ? (
+          mapReactionToIcon(userReaction.reaction_type)
         ) : (
-          <>
-            <SlLike size={24} />
-          </>
+          <SlLike size={24} />
         )}
-
-        <span className="text-sm">
-          {post.reaction.map((title: any) => (
-            <span key={title?.id}>{title?.reaction_type}</span>
-          ))}
-        </span>
+        {userReaction && (
+          <span className="text-sm">
+            {userReaction.reaction_type}
+          </span>
+        )}
       </button>
     </Tippy>
   );

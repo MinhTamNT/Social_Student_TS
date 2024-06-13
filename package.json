@@ -24,6 +24,7 @@
     "classNames": "^2.5.1",
     "emoji-mart": "^5.5.2",
     "emoji-picker-react": "^4.9.2",
+    "firebase": "^10.12.2",
     "formik": "^2.4.5",
     "moment": "^2.30.1",
     "react": "^18.2.0",

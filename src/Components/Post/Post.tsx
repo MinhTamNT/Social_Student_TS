@@ -71,18 +71,6 @@ export const Post: React.FC<PostProps> = ({
     }
   };
 
-  const hasUserReactedToPost = (
-    _postId: number,
-    userId: number,
-    reactions: any[]
-  ) => {
-    return reactions.some(
-      (reaction: any) =>
-        reaction.user_id === userId &&
-        ["like", "haha", "love"].includes(reaction.reaction_type)
-    );
-  };
-
   const handleReactionClick = async (postId: number, reactType: string) => {
     try {
       await reactEmojiPost(postId, auth?.access_token, dispatch, {
@@ -93,9 +81,11 @@ export const Post: React.FC<PostProps> = ({
       console.error("Error reacting to post:", error);
     }
   };
-
+  const handleReactionRemove = () => {
+    console.log("log");
+  };
   return (
-    <section className="md:w-[680px] w-[375px] bg-white mt-2 p-4 shadow rounded-lg">
+    <section className="md:w-[680px] w-[420px]  bg-white mt-2 md:p-4 p-2 shadow rounded-lg">
       {allPost.map((post, index) => (
         <div
           key={index}
@@ -125,8 +115,8 @@ export const Post: React.FC<PostProps> = ({
               post={post}
               user={user}
               handleReactionClick={handleReactionClick}
-              hasUserReactedToPost={hasUserReactedToPost}
               mapReactionToIcon={mapReactionToIcon}
+              handleReactionRemove={handleReactionRemove}
             />
             <button
               className="footer-post"
