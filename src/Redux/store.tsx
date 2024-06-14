@@ -21,6 +21,7 @@ import {
 import storage from "redux-persist/lib/storage";
 import { ThunkAction } from "redux-thunk";
 import { useDispatch } from "react-redux";
+import storyReducer from "./storySlice";
 export type RootState = ReturnType<typeof combinedReducer>;
 
 const persistConfig = {
@@ -35,6 +36,7 @@ const combinedReducer = combineReducers({
   user: userReducer,
   post: postReducer,
   comments: commentReducer,
+  story: storyReducer,
 });
 
 const rootReducer = (state: RootState | undefined, action: Action) => {

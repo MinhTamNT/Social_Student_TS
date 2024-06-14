@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { AuthAPI, endpoints } from "../../Service/ApiConfig";
 import MediaViewer from "../Modal/ModalStory";
-import ModalCreateStory from "../Modal/ModalCreateStory";
+import ModalCreateStory from "../Modal/UploadStory/ModalUploadStory";
 
 export const PostStory = () => {
   const auth = useSelector(

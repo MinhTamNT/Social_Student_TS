@@ -19,7 +19,7 @@ const MediaViewer: React.FC<MediaViewerProps> = ({
     const currentMedia = mediaList[currentIndex];
     const isVideo =
       typeof currentMedia === "string" && currentMedia.endsWith(".mp4");
-    const duration = isVideo ? 10000 : 5000;
+    const duration = isVideo ? 50000 : 5000;
     const interval = setInterval(() => {
       setProgress((prev) => (prev < 100 ? prev + (100 / duration) * 100 : 100));
     }, 100);
@@ -62,7 +62,7 @@ const MediaViewer: React.FC<MediaViewerProps> = ({
 
   return (
     <div className="fixed inset-0 flex z-30 justify-center items-center bg-black bg-opacity-50">
-      <div className="relative bg-white h-[500px] w-[500px]  rounded-lg shadow-lg overflow-hidden">
+      <div className="relative bg-white md:h-[700px] md:w-[500px] h-full w-full p-5  rounded-lg shadow-lg overflow-hidden">
         {isVideo ? (
           <video
             src={currentMedia}
