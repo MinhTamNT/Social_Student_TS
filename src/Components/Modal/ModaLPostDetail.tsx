@@ -190,7 +190,7 @@ const ModalPostDetail: React.FC<ModalPostDetailProps> = ({
                 mapReactionToIcon={mapReactionToIcon}
                 handleReactionRemove={handleRemoveTheReaction}
               />
-              <p>{post.likes} likes</p>
+              <p>{post.reaction.length} likes</p>
             </div>
           </div>
           <div className="mt-4 overflow-auto">

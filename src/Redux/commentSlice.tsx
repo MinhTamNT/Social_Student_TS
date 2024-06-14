@@ -27,10 +27,9 @@ const initialState: CommentState = {
   error: null,
 };
 
-// Async thunk for replying to a comment
 export const replyToComment = createAsyncThunk<
-  CommentType, // Return type of the async thunk
-  { commentId: number; accessToken: string; comment: string } // Payload type
+  CommentType,
+  { commentId: number; accessToken: string; comment: string }
 >("comments/replyToComment", async ({ commentId, accessToken, comment }) => {
   try {
     const response = await AuthAPI(accessToken).post(
@@ -46,9 +45,7 @@ export const replyToComment = createAsyncThunk<
 const commentSlice = createSlice({
   name: "comments",
   initialState,
-  reducers: {
-    // You can add additional reducers here if needed
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(replyToComment.pending, (state) => {
@@ -63,13 +60,11 @@ const commentSlice = createSlice({
           (comment) => comment.id === newComment.id
         );
         if (parentCommentIndex !== -1) {
-          // If parent comment exists, add the new reply to its replies array
           state.comments[parentCommentIndex].replies = [
             ...(state.comments[parentCommentIndex].replies || []),
             newComment,
           ];
         } else {
-          // Otherwise, push the new comment as a top-level comment
           state.comments.push(newComment);
         }
       })

@@ -26,9 +26,7 @@ export const ModalUploadPost = ({
   );
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [showUploadArea, setShowUploadArea] = useState<boolean>(false);
-  const [contentPost, setContentPost] = useState<string>(
-    "Bạn đang nghĩ gì thế?"
-  );
+  const [contentPost, setContentPost] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -113,7 +111,7 @@ export const ModalUploadPost = ({
           </div>
           <div className="content-input-from-user flex flex-col space-y-2">
             <textarea
-              className="w-full p-2 text-lg outline-none border rounded-md resize-none"
+              className="w-full h-[60px] p-2 text-lg outline-none  rounded-md resize-none"
               placeholder="Bạn đang nghĩ gì thế?"
               value={contentPost}
               onChange={(e) => setContentPost(e.target.value)}
@@ -173,7 +171,7 @@ export const ModalUploadPost = ({
               onChange={handleImageChange}
             />
           </div>
-          <div className="border-t pt-3 flex flex-col  ">
+          <div className="border-t pt-3 flex justify-center flex-col absolute md:static bottom-2 w-[90%]  ">
             <div className="flex items-center justify-between">
               <span className="font-semibold">Thêm vào bài viết của bạn</span>
               <div className="flex items-center space-x-2">

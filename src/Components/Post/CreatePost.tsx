@@ -34,7 +34,10 @@ export const CreatePost: React.FC<CreatePostProps> = ({ setRefreshPosts }) => {
           />
         </div>
         <div className="chooseUploadWith flex items-center gap-10 mt-1 ml-10">
-          <button className="flex items-center gap-2">
+          <button
+            className="flex items-center gap-2"
+            onClick={handlerOpenUploadPost}
+          >
             <CiImageOn size={32} color="#45bd62" />
             <span className="text-13">Image/Video</span>
           </button>

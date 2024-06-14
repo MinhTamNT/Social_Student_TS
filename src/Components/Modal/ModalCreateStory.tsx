@@ -3,6 +3,7 @@ import * as React from "react";
 import { TabPanel } from "../TabView/TabViewStory";
 import "./modalStyle.css";
 import { UploadStory } from "./UploadStory/UploadStory";
+
 interface ModalCreateStoryProps {
   setIsCreateStory: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -18,11 +19,11 @@ const ModalCreateStory: React.FC<ModalCreateStoryProps> = ({
 
   return (
     <div
-      className="fixed inset-0 flex z-20 justify-center items-center bg-black bg-opacity-50"
+      className="fixed inset-0 flex z-30 w-full justify-center items-center bg-black bg-opacity-50"
       onClick={() => setIsCreateStory(false)}
     >
       <div
-        className="bg-white w-full md:w-[40%] md:h-[600px] h-screen md:rounded-xl p-2"
+        className="bg-white w-full md:w-[40%] md:h-[650px] h-screen md:rounded-xl p-2"
         onClick={(e) => e.stopPropagation()}
       >
         <Tabs
@@ -40,7 +41,12 @@ const ModalCreateStory: React.FC<ModalCreateStoryProps> = ({
         <TabPanel value={activeTab} index={1}>
           <UploadStory />
         </TabPanel>
-        <button onClick={() => setIsCreateStory(false)}>Close Modal</button>
+        <button
+          className="mt-4 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-700"
+          onClick={() => setIsCreateStory(false)}
+        >
+          Close
+        </button>
       </div>
     </div>
   );

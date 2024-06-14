@@ -70,11 +70,19 @@ export const UserDeatil = () => {
       <div className="md:w-[1095px] mx-auto">
         <div className="picture_user relative ">
           <div className="cover_picture ">
-            <img
-              src="https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-6/440291400_417378867741407_379319573965574938_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=5f2048&_nc_ohc=BWDAublWt98Q7kNvgFh1ZN_&_nc_ht=scontent.fsgn8-4.fna&oh=00_AfARbAUU_5YvM0oZTRl_EMqwqFxUO-S8rA3XElk_Yi1_qA&oe=663C0AC7"
-              alt="cover_photo_user"
-              className="w-full h-[149px] md:h-[349px] border-none object-cover"
-            />
+            {user.cover_picture ? (
+              <>
+                <img
+                  src=""
+                  alt="cover_photo_user"
+                  className="w-full h-[149px] md:h-[349px] border-none object-cover"
+                />
+              </>
+            ) : (
+              <>
+                <div className="bg-black h-[149px] md:h-[349px] rounded-md"></div>
+              </>
+            )}
             <button className="absolute right-5 bottom-2 border p-2 rounded-full bg-slate-200">
               <FaCamera />
             </button>
