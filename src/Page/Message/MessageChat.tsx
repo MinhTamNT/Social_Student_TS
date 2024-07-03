@@ -1,7 +1,8 @@
 // MessageChat.tsx
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { MessageBubble } from "./MessageBubble";
 import { ChatFooter } from "./MessageFooter";
+import { User } from "./Message";
 
 interface MessageProps {
   sender: string;
@@ -11,7 +12,7 @@ interface MessageProps {
 }
 
 interface MessageChatProps {
-  selectedUser: null;
+  selectedUser: User | null;
 }
 
 export const MessageChat: React.FC<MessageChatProps> = ({ selectedUser }) => {
@@ -24,14 +25,13 @@ export const MessageChat: React.FC<MessageChatProps> = ({ selectedUser }) => {
 
     const timestamp = new Date().toLocaleTimeString();
     const message: MessageProps = {
-      sender: "minhtam7895", // Thay bằng thông tin người dùng đăng nhập
+      sender: "minhtam7895",
       content: newMessage,
       timestamp,
       isSender: true,
     };
 
     try {
-      await sendMessage(message);
       setNewMessage("");
     } catch (error) {
       console.error("Error sending message:", error);
@@ -40,15 +40,15 @@ export const MessageChat: React.FC<MessageChatProps> = ({ selectedUser }) => {
 
   return (
     <div className="h-full flex flex-col bg-gray-300 shadow-sm">
-      <div className="room-user flex items-center shadow-md rounded-md bg-white">
+      <div className="room-user flex items-center shadow-md  bg-white">
         {selectedUser && (
           <>
             <img
-              src={selectedUser.avatarUser}
+              src={selectedUser.avatar_user}
               alt="user_chat"
-              className="object-cover rounded-full p-2"
+              className="object-cover rounded-full p-2 h-12"
             />
-            <p>{selectedUser.name}</p>
+            <p>{selectedUser.username}</p>
           </>
         )}
       </div>

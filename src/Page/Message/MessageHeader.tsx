@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { AuthAPI, endpoints } from "../../Service/ApiConfig";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Redux/store";
 
 export interface User {
   id: number;
-  avatarUser: string;
-  name: string;
+  avatar_user: string;
+  username: string;
 }
 
 interface Props {
@@ -15,24 +18,22 @@ export const MessageSidebar: React.FC<Props> = ({
   selectedUser,
   setSelectedUser,
 }) => {
-  const listUser: User[] = [
-    {
-      id: 1,
-      avatarUser: "https://via.placeholder.com/40",
-      name: "John Doe",
-    },
-    {
-      id: 2,
-      avatarUser: "https://via.placeholder.com/40",
-      name: "Jane Smith",
-    },
-    {
-      id: 3,
-      avatarUser: "https://via.placeholder.com/40",
-      name: "Alice Johnson",
-    },
-  ];
-
+  const [listUser, setListUser] = useState<User[]>([]);
+  const auth = useSelector(
+    (state: RootState) => state?.user?.user?.currentUser
+  );
+  useEffect(() => {
+    const getAllUser = async () => {
+      const res = await AuthAPI(auth?.access_token).get(
+        endpoints["get-all-user"]
+      );
+      setListUser(res.data);
+      console.log("====================================");
+      console.log(res.data);
+      console.log("====================================");
+    };
+    getAllUser();
+  }, []);
   const handleUserClick = (user: User) => {
     setSelectedUser(user);
   };
@@ -53,13 +54,13 @@ export const MessageSidebar: React.FC<Props> = ({
               onClick={() => handleUserClick(user)}
             >
               <img
-                src={user.avatarUser}
+                src={user.avatar_user}
                 alt="User Avatar"
                 className="w-10 h-10 rounded-full"
               />
               <div className="ml-2">
                 <h2 className="text-16 font-semibold hidden md:block">
-                  {user.name}
+                  {user.username}
                 </h2>
               </div>
             </div>

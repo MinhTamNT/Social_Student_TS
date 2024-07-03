@@ -4,10 +4,10 @@ import { MessageSidebar } from "./MessageHeader";
 import { GrFormPreviousLink } from "react-icons/gr";
 import { useState } from "react";
 
-interface User {
+export interface User {
   id: number;
-  avatarUser: string;
-  name: string;
+  avatar_user: string;
+  username: string;
 }
 
 export const Message = () => {

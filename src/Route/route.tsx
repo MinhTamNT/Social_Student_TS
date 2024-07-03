@@ -10,7 +10,6 @@ export const RouteSocial = [
   {
     path: config.route.home,
     component: Home,
-    isAuthencatied: true,
   },
   {
     path: config.route.login,
@@ -26,7 +25,6 @@ export const RouteSocial = [
     path: `${config.route.profile}/:username`,
     component: UserDeatil,
     layout: null,
-    isAuthencatied: true,
   },
   {
     path: config.route.messgae,
