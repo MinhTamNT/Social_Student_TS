@@ -1,3 +1,5 @@
+import React from "react";
+
 interface ChatFooterProps {
   newMessage: string;
   setNewMessage: React.Dispatch<React.SetStateAction<string>>;
@@ -10,7 +12,7 @@ export const ChatFooter: React.FC<ChatFooterProps> = ({
   handleSendMessage,
 }) => {
   return (
-    <footer className="p-4 bg-gray-100  border-gray-200">
+    <footer className="p-4 bg-gray-100 border-gray-200">
       <form onSubmit={handleSendMessage} className="flex">
         <input
           type="text"

@@ -28,9 +28,6 @@ export const MessageSidebar: React.FC<Props> = ({
         endpoints["get-all-user"]
       );
       setListUser(res.data);
-      console.log("====================================");
-      console.log(res.data);
-      console.log("====================================");
     };
     getAllUser();
   }, []);
