@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { IoIosClose, IoIosTrendingUp, IoIosMenu } from "react-icons/io";
+import { IoIosClose } from "react-icons/io";
 import { GoHome } from "react-icons/go";
 import { FiMessageCircle } from "react-icons/fi";
-import { CiSquarePlus } from "react-icons/ci";
 import { MdOutlineLocalPolice } from "react-icons/md";
 import { Link } from "react-router-dom";
 
@@ -25,15 +24,8 @@ export const Sidebar = ({ isOpen, setIsSidebarOpen }: IProp) => {
       icon: <FiMessageCircle size={30} />,
       route: "/messages",
     },
-
     {
       id: 3,
-      title: "Create Post",
-      icon: <CiSquarePlus size={30} />,
-      route: "/create-post",
-    },
-    {
-      id: 4,
       title: "Private Policy",
       icon: <MdOutlineLocalPolice size={30} />,
       route: "/privacy-policy",
@@ -73,10 +65,10 @@ export const Sidebar = ({ isOpen, setIsSidebarOpen }: IProp) => {
         ></div>
       )}
       <div
-        className={`md:fixed z-30 absolute md:top-20 top-0 ${
+        className={`md:fixed z-30 absolute md:top-[65px] top-0 ${
           isMobile
             ? "w-[70%] h-screen z-10 bg-white"
-            : "w-[272px] rounded-lg px-5 py-3"
+            : "w-[272px] rounded-lg px-5 py-3 bg-white shadow-lg"
         } ${
           isOpen
             ? "block animate-slide-in-sidebar"
@@ -85,26 +77,24 @@ export const Sidebar = ({ isOpen, setIsSidebarOpen }: IProp) => {
       >
         <div className="header_close_sidebar md:hidden block">
           <button
-            className="w-[32px] h-[32px] p-2 cursor-pointer hover:opacity-85 md:hidden absolute right-0"
+            className="w-[32px] h-[32px] p-2 cursor-pointer hover:opacity-85 md:hidden absolute right-0 top-0 mt-2 mr-2"
             onClick={handlerCloseMenu}
           >
             <IoIosClose size={30} className="cursor-pointer" />
           </button>
         </div>
         <div className="py-2 w-full md:mt-0 mt-10">
-          <div className="">
-            <div className="md:h-[600px]">
-              {MenuSidebar.map((menu, index) => (
-                <Link
-                  to={menu.route}
-                  className="flex cursor-pointer items-center mb-4 w-full hover:bg-bg-hover p-2 rounded-md"
-                  key={index}
-                >
-                  {menu.icon}
-                  <span className="ml-2 text-16 font-bold">{menu.title}</span>
-                </Link>
-              ))}
-            </div>
+          <div className="md:h-[600px] overflow-y-auto">
+            {MenuSidebar.map((menu, index) => (
+              <Link
+                key={index}
+                to={menu.route}
+                className="flex items-center mb-4 p-2 rounded-md hover:bg-gray-200"
+              >
+                {menu.icon}
+                <span className="ml-2 text-lg font-semibold">{menu.title}</span>
+              </Link>
+            ))}
           </div>
         </div>
       </div>

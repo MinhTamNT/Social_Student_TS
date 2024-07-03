@@ -18,10 +18,10 @@ export const LayoutDefault = ({ children }: Props) => {
       <Toaster position="top-right" reverseOrder={true} />
       <Header onMenuClick={handlerMentClick} />
       <div className="conatiner flex justify-between pt-[60px] max-w-[100%]">
-        <div className="w-[300px] md:mr-20">
+        <div className="w-[300px] md:mr-48">
           <Sidebar isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
         </div>
-        <div className="content  mx-auto md:w-[1120px]">{children}</div>
+        <div className="content mx-auto md:w-[1120px]">{children}</div>
       </div>
     </div>
   );

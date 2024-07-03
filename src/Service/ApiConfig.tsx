@@ -16,6 +16,7 @@ export const endpoints = {
   "deleted-comment": (commentId: number) => `/post/comment/${commentId}/`,
   "reply-comment": (commentId: number) => `/post/comment/${commentId}/reply/`,
   "get-all-user": "/user/",
+  "search-post": (some: string) => `/post/search/?query=${some}`,
 };
 
 export const AuthAPI = (accessToken: string): AxiosInstance => {

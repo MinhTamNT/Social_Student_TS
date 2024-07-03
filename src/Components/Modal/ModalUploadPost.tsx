@@ -86,7 +86,7 @@ export const ModalUploadPost = ({
   };
 
   return (
-    <div className="fixed inset-0 flex z-20 justify-center items-center bg-black bg-opacity-50 rounded-lg">
+    <div className="fixed inset-0 flex z-30 justify-center items-center bg-black bg-opacity-50 rounded-lg">
       {isLoading && <Loading />}
       <div className="bg-white rounded-lg p-4 md:w-[500px] w-full md:h-auto h-screen">
         <div className="modal_header border-b py-2 flex items-center justify-between">
@@ -100,7 +100,7 @@ export const ModalUploadPost = ({
             <IoMdClose size={16} />
           </button>
         </div>
-        <div className="modal_content my-3 flex flex-col space-y-3">
+        <div className="modal_content w-full  flex flex-col ">
           <div className="content_user flex items-center gap-2">
             <img
               src={user?.avatar_user}

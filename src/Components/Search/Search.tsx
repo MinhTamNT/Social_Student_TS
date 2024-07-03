@@ -4,24 +4,22 @@ import "tippy.js/dist/tippy.css";
 import { SearchItem } from "./SearchItem";
 
 export const Search = () => {
-  const [searchResult, setSearchResult] = useState("");
-  const [showResult, setShowResult] = useState(false);
-  const handleChange = (e: any) => {
-    const searchValues = e.target.value;
-    if (!searchValues.startsWith(" ")) {
-      setSearchResult(searchValues);
-      setShowResult(true);
-    }
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setSearchQuery(value.trim()); 
   };
+
   return (
     <div className="wrapper">
       <Tippy
         interactive
-        visible={showResult && searchResult.length > 0}
-        onClickOutside={() => setShowResult(false)}
+        visible={searchQuery.length > 0} 
+        onClickOutside={() => setSearchQuery("")} 
         render={(attrs) => (
           <div {...attrs} tabIndex={-1}>
-            <SearchItem />
+            <SearchItem searchQuery={searchQuery} />{" "}
           </div>
         )}
       >

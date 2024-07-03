@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface AuthState {
   login: {
+    access_token(access_token: any): unknown;
     currentUser: any;
     isFetching: boolean;
     error: boolean;

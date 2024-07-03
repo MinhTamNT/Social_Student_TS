@@ -12,7 +12,8 @@ export const App = () => {
         <Routes>
           {RouteSocial.map((route, index) => {
             const Page = route.component;
-            const LayoutComponent = route.layout ?? LayoutDefault;
+            const LayoutComponent =
+              route.layout === null ? route.component : LayoutDefault;
 
             return (
               <Route
