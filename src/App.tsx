@@ -1,10 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import React from "react";
 import { RouteSocial } from "./Route/route";
-import ProtectedRoute, {
-  RequireAuth,
-} from "./Components/RequireAuth/RequireAuth";
+import { RequireAuth } from "./Components/RequireAuth/RequireAuth";
 import { LayoutDefault } from "./Components/LayoutDefault/LayoutDefautl";
+import { Login } from "./Page/Login/Login";
+import { Register } from "./Page/Register/Register";
 
 export const App = () => {
   return (
@@ -13,13 +12,7 @@ export const App = () => {
         <Routes>
           {RouteSocial.map((route, index) => {
             const Page = route.component;
-            let LayoutComponent = LayoutDefault;
-
-            if (route.layout) {
-              LayoutComponent = route.layout;
-            } else if (route.layout === null) {
-              LayoutComponent = React.Fragment;
-            }
+            const LayoutComponent = route.layout ?? LayoutDefault;
 
             return (
               <Route
@@ -27,18 +20,16 @@ export const App = () => {
                 path={route.path}
                 element={
                   <LayoutComponent>
-                    {route.isAuthencatied ? (
-                      <RequireAuth>
-                        <Page />
-                      </RequireAuth>
-                    ) : (
+                    <RequireAuth>
                       <Page />
-                    )}
+                    </RequireAuth>
                   </LayoutComponent>
                 }
               />
             );
           })}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </div>
     </Router>
