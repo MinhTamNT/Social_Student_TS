@@ -1,8 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { LayoutDefautl } from "./Components/LayoutDefault/LayoutDefautl";
 import React from "react";
 import { RouteSocial } from "./Route/route";
-import ProtectedRoute from "./Components/RequireAuth/RequireAuth";
+import ProtectedRoute, {
+  RequireAuth,
+} from "./Components/RequireAuth/RequireAuth";
+import { LayoutDefault } from "./Components/LayoutDefault/LayoutDefautl";
 
 export const App = () => {
   return (
@@ -11,22 +13,28 @@ export const App = () => {
         <Routes>
           {RouteSocial.map((route, index) => {
             const Page = route.component;
-            const Layout =
-              route.layout === null ? React.Fragment : LayoutDefautl;
+            let LayoutComponent = LayoutDefault;
+
+            if (route.layout) {
+              LayoutComponent = route.layout;
+            } else if (route.layout === null) {
+              LayoutComponent = React.Fragment;
+            }
+
             return (
               <Route
                 key={index}
                 path={route.path}
                 element={
-                  <Layout>
+                  <LayoutComponent>
                     {route.isAuthencatied ? (
-                      <ProtectedRoute>
+                      <RequireAuth>
                         <Page />
-                      </ProtectedRoute>
+                      </RequireAuth>
                     ) : (
                       <Page />
                     )}
-                  </Layout>
+                  </LayoutComponent>
                 }
               />
             );

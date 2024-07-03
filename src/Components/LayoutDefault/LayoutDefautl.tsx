@@ -7,7 +7,7 @@ type Props = {
   children: ReactElement;
 };
 
-export const LayoutDefautl = ({ children }: Props) => {
+export const LayoutDefault = ({ children }: Props) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handlerMentClick = () => {

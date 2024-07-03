@@ -3,4 +3,5 @@ export const route = {
   login: "/login",
   register: "/register",
   profile: "/profile",
+  messgae: "/messages",
 };

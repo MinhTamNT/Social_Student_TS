@@ -2,15 +2,8 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { logoutSuccess } from "../../Redux/authSlice";
-import { Link, useNavigate } from "react-router-dom";
-import {
-  Avatar,
-  Button,
-  IconButton,
-  Menu,
-  MenuItem,
-  Divider,
-} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { Avatar, IconButton, Menu, MenuItem, Divider } from "@mui/material";
 import { HiOutlineMenuAlt1, HiOutlineBell } from "react-icons/hi";
 import { CiSearch } from "react-icons/ci";
 import { Logout, Settings } from "@mui/icons-material";
@@ -28,7 +21,6 @@ export const Header: React.FC<IProp> = ({ onMenuClick }) => {
   const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -37,7 +29,7 @@ export const Header: React.FC<IProp> = ({ onMenuClick }) => {
     setAnchorEl(null);
   };
   const handleLink = () => {
-    <Link to={"/profile"} />;
+    navigate(`/profile/${user?.username}`);
   };
   const handlerLogoutUser = () => {
     dispatch(logoutSuccess());
@@ -81,31 +73,28 @@ export const Header: React.FC<IProp> = ({ onMenuClick }) => {
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
-                PaperProps={{
-                  elevation: 0,
-                  sx: {
-                    overflow: "visible",
-                    filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                    mt: 1.5,
-                    padding: 2,
-                    "& .MuiAvatar-root": {
-                      width: 32,
-                      height: 32,
-                      ml: -0.5,
-                      mr: 1,
-                    },
-                    "&::before": {
-                      content: '""',
-                      display: "block",
-                      position: "absolute",
-                      top: 0,
-                      right: 14,
-                      width: 10,
-                      height: 10,
-                      bgcolor: "background.paper",
-                      transform: "translateY(-50%) rotate(45deg)",
-                      zIndex: 0,
-                    },
+                sx={{
+                  overflow: "visible",
+                  filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                  mt: 1.5,
+                  padding: 2,
+                  "& .MuiAvatar-root": {
+                    width: 32,
+                    height: 32,
+                    ml: -0.5,
+                    mr: 1,
+                  },
+                  "&::before": {
+                    content: '""',
+                    display: "block",
+                    position: "absolute",
+                    top: 0,
+                    right: 14,
+                    width: 10,
+                    height: 10,
+                    bgcolor: "background.paper",
+                    transform: "translateY(-50%) rotate(45deg)",
+                    zIndex: 0,
                   },
                 }}
                 transformOrigin={{ horizontal: "right", vertical: "top" }}

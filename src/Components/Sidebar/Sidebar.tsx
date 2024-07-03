@@ -25,20 +25,15 @@ export const Sidebar = ({ isOpen, setIsSidebarOpen }: IProp) => {
       icon: <FiMessageCircle size={30} />,
       route: "/messages",
     },
+
     {
       id: 3,
-      title: "Popular",
-      icon: <IoIosTrendingUp size={30} />,
-      route: "/popular",
-    },
-    {
-      id: 4,
       title: "Create Post",
       icon: <CiSquarePlus size={30} />,
       route: "/create-post",
     },
     {
-      id: 5,
+      id: 4,
       title: "Private Policy",
       icon: <MdOutlineLocalPolice size={30} />,
       route: "/privacy-policy",
@@ -78,7 +73,7 @@ export const Sidebar = ({ isOpen, setIsSidebarOpen }: IProp) => {
         ></div>
       )}
       <div
-        className={`md:fixed z-30 absolute md:top-10 top-0 ${
+        className={`md:fixed z-30 absolute md:top-20 top-0 ${
           isMobile
             ? "w-[70%] h-screen z-10 bg-white"
             : "w-[272px] rounded-lg px-5 py-3"
@@ -109,10 +104,6 @@ export const Sidebar = ({ isOpen, setIsSidebarOpen }: IProp) => {
                   <span className="ml-2 text-16 font-bold">{menu.title}</span>
                 </Link>
               ))}
-              <div className="md:flex items-center gap-2 hidden px-2">
-                <IoIosMenu size={32} />
-                <span className="text-[20px]">See more</span>
-              </div>
             </div>
           </div>
         </div>

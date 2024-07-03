@@ -25,8 +25,6 @@ import {
   reactPostSuccess,
 } from "./postSlice";
 import { updateError, updateStart } from "./userSlice";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebaseConfgic";
 
 export const RegisterUser = async (
   newUser: FormData,
@@ -41,18 +39,6 @@ export const RegisterUser = async (
       },
     });
 
-    // Extract email and password from FormData
-    const email = newUser.get("email") as string;
-    const password = newUser.get("password") as string;
-
-    // Log the extracted values for debugging
-    console.log(email);
-    console.log(password);
-
-    // Register the user with Firebase Authentication
-    await createUserWithEmailAndPassword(auth, email, password);
-
-    // Dispatch success action and navigate to login page
     dispatch(registerSuccess(res.data));
     navigate("/login");
   } catch (error) {
@@ -67,6 +53,7 @@ export const LoginUser = async (newUser: any, dispatch: any, navigate: any) => {
     const res = await API.post(endpoints["login"], newUser);
     if (res.status === 200) {
       dispatch(loginSucces(res.data));
+
       navigate("/");
       setTimeout(() => {
         toast.success("Login successfully");
