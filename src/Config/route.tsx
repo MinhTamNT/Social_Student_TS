@@ -4,4 +4,5 @@ export const route = {
   register: "/register",
   profile: "/profile",
   messgae: "/messages",
+  friend: "/user-other",
 };

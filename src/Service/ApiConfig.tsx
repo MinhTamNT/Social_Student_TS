@@ -17,6 +17,8 @@ export const endpoints = {
   "reply-comment": (commentId: number) => `/post/comment/${commentId}/reply/`,
   "get-all-user": "/user/",
   "search-post": (some: string) => `/post/search/?query=${some}`,
+  "get-all-post-user": (userId: number) => `/post/${userId}/posts-of-user/`,
+  "get-user-id": (userId: number) => `/user/${userId}/get-user/`,
 };
 
 export const AuthAPI = (accessToken: string): AxiosInstance => {

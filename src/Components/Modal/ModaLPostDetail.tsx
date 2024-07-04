@@ -35,6 +35,7 @@ interface CommentType {
   user: { id: number; username: string; avatar_user: string };
   comment: string;
   replies?: CommentType[];
+  classify: String;
 }
 
 interface ModalPostDetailProps {
@@ -116,7 +117,7 @@ const ModalPostDetail: React.FC<ModalPostDetailProps> = ({
   const handleReplySubmit = (commentId: number) => {
     try {
       const accessToken = auth?.access_token ?? "";
-      const comment = replyComment[commentId]; // Get the specific comment for commentId
+      const comment = replyComment[commentId];
       appDispatch(replyToComment({ commentId, accessToken, comment }));
       setReplyComment((prevState) => ({ ...prevState, [commentId]: "" }));
       fetchComments();
@@ -167,7 +168,7 @@ const ModalPostDetail: React.FC<ModalPostDetailProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 flex z-20 justify-center items-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 flex z-30 justify-center items-center bg-black bg-opacity-50">
       <div className="bg-white h-screen overflow-auto w-full md:h-[700px] p-4 md:w-[900px] rounded-lg shadow-lg">
         <div className="sticky z-20 top-0 bg-white shadow-sm p-2 flex justify-between items-center">
           <p className="text-xl mx-auto font-semibold">Thông tin bài viết</p>
@@ -208,14 +209,23 @@ const ModalPostDetail: React.FC<ModalPostDetailProps> = ({
                       <p className="font-semibold">{comment.user.username}</p>
                       <p className="text-gray-600">{comment.comment}</p>
                     </div>
-                    <IconButton
-                      aria-label="more"
-                      aria-controls="long-menu"
-                      aria-haspopup="true"
-                      onClick={(e) => handleMenuOpen(e, comment)}
-                    >
-                      <MoreVertIcon />
-                    </IconButton>
+                    <div className="flex items-center">
+                      {comment?.classify === "negative" ? (
+                        <p className="text-red-500">Tiêu cực</p>
+                      ) : comment?.classify === "positive" ? (
+                        <p className="text-green-500">Tích cực</p>
+                      ) : (
+                        <p className="text-gray-500">Bình thường</p>
+                      )}
+                      <IconButton
+                        aria-label="more"
+                        aria-controls="long-menu"
+                        aria-haspopup="true"
+                        onClick={(e) => handleMenuOpen(e, comment)}
+                      >
+                        <MoreVertIcon />
+                      </IconButton>
+                    </div>
                   </div>
                   <div className="ml-12">
                     {comment.replies?.map((reply) => (

@@ -19,6 +19,19 @@ interface PostProps {
   setRefreshPosts: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+export const mapReactionToIcon = (reactionType: string) => {
+  switch (reactionType) {
+    case "like":
+      return <SlLike size={24} />;
+    case "love":
+      return <FcLike size={24} />;
+    case "haha":
+      return <FaRegFaceLaughSquint size={24} color="#f78e36" />;
+    default:
+      return null;
+  }
+};
+
 export const Post: React.FC<PostProps> = ({
   refreshPosts,
   setRefreshPosts,
@@ -57,19 +70,6 @@ export const Post: React.FC<PostProps> = ({
     };
     fetchPosts();
   }, [refreshPosts]);
-
-  const mapReactionToIcon = (reactionType: string) => {
-    switch (reactionType) {
-      case "like":
-        return <SlLike size={24} />;
-      case "love":
-        return <FcLike size={24} />;
-      case "haha":
-        return <FaRegFaceLaughSquint size={24} color="#f78e36" />;
-      default:
-        return null;
-    }
-  };
 
   const handleReactionClick = async (postId: number, reactType: string) => {
     try {

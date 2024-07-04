@@ -1,14 +1,23 @@
 import React from "react";
-
+import { useNavigate } from "react-router-dom";
 import moment from "moment";
+
 const PostHeader: React.FC<{
   post: any;
   user: any;
   handlerModal?: () => void;
 }> = ({ post, user, handlerModal }) => {
+  const navigate = useNavigate();
+
+  const handleUserClick = () => {
+    if (post?.user?.id !== user?.id) {
+      navigate(`/user-other/${post.user.id}`);
+    }
+  };
+
   return (
     <>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2" onClick={handleUserClick}>
         <img
           src={post?.user?.avatar_user}
           alt="avatar_user"

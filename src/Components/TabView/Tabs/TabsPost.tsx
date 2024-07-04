@@ -1,10 +1,30 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../Redux/store";
 import { CreatePost } from "../../Post/CreatePost";
-export const TabsPost = () => {
-  const user = useSelector(
-    (state: RootState) => state?.user?.user?.currentUser
+import { SetStateAction, useEffect, useState } from "react";
+import { AuthAPI, endpoints } from "../../../Service/ApiConfig";
+import PostHeader from "../../Post/PostHeader";
+import PostContent from "../../Post/PostContent";
+import { reactEmojiPost } from "../../../Redux/apiRequest";
+import ReactionSelector from "../../Post/ReactionPost";
+import { mapReactionToIcon } from "../../Post/Post";
+
+interface IProp {
+  user: {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
+}
+
+export const TabsPost: React.FC<IProp> = ({ user }: IProp) => {
+  const auth = useSelector(
+    (state: RootState) => state?.auth?.login?.currentUser
   );
+  const [post, setPost] = useState([]);
+  const dispatch = useDispatch();
+  const [, setRefreshPosts] = useState(false);
   const listFrined = [
     {
       id: 1,
@@ -25,6 +45,28 @@ export const TabsPost = () => {
         "https://i.9mobi.vn/cf/Images/tt/2021/3/15/hinh-anh-dai-dien-dep-dung-cho-facebook-instagram-zalo-9.jpg",
     },
   ];
+  useEffect(() => {
+    const getAllPost = async () => {
+      const res = await AuthAPI(auth?.access_token).get(
+        endpoints["get-all-post-user"](user?.id)
+      );
+      setPost(res.data);
+    };
+    getAllPost();
+  }, [user?.id]);
+  const handleReactionClick = async (postId: number, reactType: string) => {
+    try {
+      await reactEmojiPost(postId, auth?.access_token, dispatch, {
+        reaction_type: reactType,
+      });
+      setRefreshPosts((prev) => !prev);
+    } catch (error) {
+      console.error("Error reacting to post:", error);
+    }
+  };
+  const handleReactionRemove = () => {
+    console.log("log");
+  };
   return (
     <div className="flex gap-5">
       <div className="w-3/10">
@@ -55,7 +97,29 @@ export const TabsPost = () => {
         </div>
       </div>
       <div className="w-[70%] h-auto">
-        <CreatePost />
+        <CreatePost
+          setRefreshPosts={function (value: SetStateAction<boolean>): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
+        {post.map((allPost, index) => (
+          <div className="mb-2" key={index}>
+            <PostHeader post={allPost} user={user} />
+            <PostContent post={allPost} />
+            <div className="post_footer flex justify-between items-center gap-2 md:gap-10 mt-4 px-1">
+              <ReactionSelector
+                post={allPost}
+                user={user}
+                handleReactionClick={handleReactionClick}
+                mapReactionToIcon={mapReactionToIcon}
+                handleReactionRemove={handleReactionRemove}
+              />
+              <button className="footer-post">
+                <span className="text-sm">Comment</span>
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

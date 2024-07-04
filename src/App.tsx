@@ -4,6 +4,7 @@ import { RequireAuth } from "./Components/RequireAuth/RequireAuth";
 import { LayoutDefault } from "./Components/LayoutDefault/LayoutDefautl";
 import { Login } from "./Page/Login/Login";
 import { Register } from "./Page/Register/Register";
+import React from "react";
 
 export const App = () => {
   return (
@@ -12,9 +13,13 @@ export const App = () => {
         <Routes>
           {RouteSocial.map((route, index) => {
             const Page = route.component;
-            const LayoutComponent =
-              route.layout === null ? route.component : LayoutDefault;
+            let LayoutComponent = LayoutDefault;
 
+            if (route.layout) {
+              LayoutComponent = route.layout;
+            } else if (route.layout === null) {
+              LayoutComponent = React.Fragment;
+            }
             return (
               <Route
                 key={index}

@@ -65,10 +65,10 @@ export const Sidebar = ({ isOpen, setIsSidebarOpen }: IProp) => {
         ></div>
       )}
       <div
-        className={`md:fixed z-30 absolute md:top-[65px] top-0 ${
+        className={`md:fixed z-30 h-screen absolute md:top-[65px] top-0 ${
           isMobile
             ? "w-[70%] h-screen z-10 bg-white"
-            : "w-[272px] rounded-lg px-5 py-3 bg-white shadow-lg"
+            : "w-[272px] rounded-lg px-5 py-3 bg-white shadow-md"
         } ${
           isOpen
             ? "block animate-slide-in-sidebar"

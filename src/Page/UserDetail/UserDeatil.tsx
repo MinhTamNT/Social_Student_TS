@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { GrLinkPrevious } from "react-icons/gr";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +12,12 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { CustomTabPanel } from "../../Components/TabView/CustomTabPanel/CustomTabPanel";
 import { TabsPost } from "../../Components/TabView/Tabs/TabsPost";
+import { AuthAPI, endpoints } from "../../Service/ApiConfig";
+import PostHeader from "../../Components/Post/PostHeader";
+import PostContent from "../../Components/Post/PostContent";
+import ReactionSelector from "../../Components/Post/ReactionPost";
+import { mapReactionToIcon } from "../../Components/Post/Post";
+import { reactEmojiPost } from "../../Redux/apiRequest";
 function a11yProps(index: number) {
   return {
     id: `simple-tab-${index}`,
@@ -22,17 +28,31 @@ export const UserDeatil = () => {
   const user = useSelector(
     (state: RootState) => state?.user?.user?.currentUser
   );
+  const auth = useSelector(
+    (state: RootState) => state?.auth?.login?.currentUser
+  );
   const [isModalEdit, setIsModalEdit] = useState<boolean>(false);
   const [value, setValue] = useState(0);
   const isMobile = useIsMobile();
+  const [post, setPost] = useState([]);
   const navigate = useNavigate();
+  const [, setRefreshPosts] = useState(false);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
   const goBack = () => {
     navigate(-1);
   };
-
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const getAllPost = async () => {
+      const res = await AuthAPI(auth?.access_token).get(
+        endpoints["get-all-post-user"](user?.id)
+      );
+      setPost(res.data);
+    };
+    getAllPost();
+  }, [user?.id]);
   const listFrined = [
     {
       id: 1,
@@ -53,6 +73,20 @@ export const UserDeatil = () => {
         "https://i.9mobi.vn/cf/Images/tt/2021/3/15/hinh-anh-dai-dien-dep-dung-cho-facebook-instagram-zalo-9.jpg",
     },
   ];
+  const handleReactionClick = async (postId: number, reactType: string) => {
+    try {
+      await reactEmojiPost(postId, auth?.access_token, dispatch, {
+        reaction_type: reactType,
+      });
+      setRefreshPosts((prev) => !prev);
+    } catch (error) {
+      console.error("Error reacting to post:", error);
+    }
+  };
+
+  const handleReactionRemove = () => {
+    console.log("log");
+  };
   return (
     <section className=" relative h-screen">
       <div className="header-profile flex justify-between items-center p-2 bg-white shadow-sm md:hidden  ">
@@ -140,7 +174,7 @@ export const UserDeatil = () => {
               </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>
-              <TabsPost />
+              <TabsPost user={user} />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
               Friend
@@ -176,7 +210,7 @@ export const UserDeatil = () => {
             </div>
             <div className="grid grid-cols-3 gap-4">
               {listFrined.map((friend, index) => (
-                <div className="col-span-1">
+                <div className="col-span-1" key={index}>
                   <img
                     src={friend.avatar_user}
                     alt="friend-avatar"
@@ -185,6 +219,29 @@ export const UserDeatil = () => {
                 </div>
               ))}
             </div>
+          </div>
+          <div className="mt-10">
+            {post.map((allPost, index) => (
+              <div className="mb-2" key={index}>
+                <PostHeader post={allPost} user={user} />
+                <PostContent post={allPost} />
+                <div className="post_footer flex justify-between items-center gap-2 md:gap-10 mt-4 px-1">
+                  <ReactionSelector
+                    post={allPost}
+                    user={user}
+                    handleReactionClick={handleReactionClick}
+                    mapReactionToIcon={mapReactionToIcon}
+                    handleReactionRemove={handleReactionRemove}
+                  />
+                  {/* <button
+                    className="footer-post"
+                    onClick={() => handlePostDetail(post)}
+                  >
+                    <span className="text-sm">Comment</span>
+                  </button> */}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}

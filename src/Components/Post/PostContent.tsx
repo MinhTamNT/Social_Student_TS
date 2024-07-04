@@ -4,7 +4,7 @@ const PostContent: React.FC<{ post: any }> = ({ post }) => {
   return (
     <div className="mt-4">
       {post.media_file.length === 0 ? (
-        <div className="flex items-center justify-center bg-gray-200 rounded-md p-4 overflow-hidden">
+        <div className="flex items-center justify-center bg-gray-200 h-[320px] rounded-md p-4 overflow-hidden">
           <p className="text-lg text-gray-700 break-words overflow-wrap">
             {post.content}
           </p>

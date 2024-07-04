@@ -23,7 +23,7 @@ interface ReactionSelectorProps {
   post: Post;
   user: User;
   handleReactionClick: (postId: number, reactType: string) => void;
-  handleReactionRemove : (postId: number) => void;
+  handleReactionRemove: (postId: number) => void;
   mapReactionToIcon: (reactionType: string) => JSX.Element | null;
 }
 
@@ -37,16 +37,16 @@ const ReactionSelector: React.FC<ReactionSelectorProps> = ({
   const [userReaction, setUserReaction] = useState<Reaction | null>(null);
 
   useEffect(() => {
-    const reaction = post.reaction.find((reaction) => reaction.user_id === user.id);
+    const reaction = post.reaction.find(
+      (reaction) => reaction.user_id === user.id
+    );
     setUserReaction(reaction || null);
   }, [post.reaction, user.id]);
 
   const handleButtonClick = () => {
     if (userReaction) {
-      handleReactionRemove(post.id); // Gọi API huỷ reaction
-      setUserReaction(null); // Cập nhật trạng thái sau khi huỷ
-    } else {
-      // Open reaction selector
+      handleReactionRemove(post.id);
+      setUserReaction(null);
     }
   };
 
@@ -62,7 +62,11 @@ const ReactionSelector: React.FC<ReactionSelectorProps> = ({
               reactions={["like", "love", "haha"]}
               onSelect={(reaction) => {
                 handleReactionClick(post.id, reaction);
-                setUserReaction({ id: Date.now(), user_id: user.id, reaction_type: reaction });
+                setUserReaction({
+                  id: Date.now(),
+                  user_id: user.id,
+                  reaction_type: reaction,
+                });
               }}
             />
           </div>
@@ -79,9 +83,7 @@ const ReactionSelector: React.FC<ReactionSelectorProps> = ({
           <SlLike size={24} />
         )}
         {userReaction && (
-          <span className="text-sm">
-            {userReaction.reaction_type}
-          </span>
+          <span className="text-sm">{userReaction.reaction_type}</span>
         )}
       </button>
     </Tippy>
