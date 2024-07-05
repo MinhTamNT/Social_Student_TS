@@ -84,15 +84,13 @@ export const FriendPage: React.FC = () => {
       console.log("Connected to WebSocket server");
 
       const requestData = {
-        action: "friend_request",
+        action: "send_friend_request",
         friend_id: friendId,
       };
       ws.send(JSON.stringify(requestData));
     };
 
-    ws.onmessage = (event) => {
-      console.log("Received message:", event.data);
-    };
+    ws.onmessage = (event) => {};
 
     ws.onerror = (error) => {
       console.error("WebSocket error:", error);
