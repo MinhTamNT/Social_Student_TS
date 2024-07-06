@@ -28,6 +28,7 @@ export const RouteSocial = [
     component: Message,
     layout: HeaderOnly,
   },
+
   {
     path: "*",
     component: ErrorPage,

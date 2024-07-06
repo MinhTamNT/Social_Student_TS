@@ -32,7 +32,6 @@ import {
   updateError,
   updateStart,
 } from "./userSlice";
-import { access } from "fs";
 
 export const RegisterUser = async (
   newUser: FormData,
@@ -49,8 +48,11 @@ export const RegisterUser = async (
 
     dispatch(registerSuccess(res.data));
     navigate("/login");
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    const errorMessage = error?.response?.request?.response
+      ? JSON.parse(error.response.request.response).Error
+      : "Registration failed";
+    toast.error(errorMessage);
     dispatch(registerFail());
   }
 };

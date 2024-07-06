@@ -5,4 +5,5 @@ export const route = {
   profile: "/profile",
   messgae: "/messages",
   friend: "/user-other",
+  rest: "/rest-password",
 };

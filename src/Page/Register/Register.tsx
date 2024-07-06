@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { RegisterUser } from "../../Redux/apiRequest";
 import { Loading } from "../../Components/LoadingPage/LoadingPage";
+import toast, { Toaster } from "react-hot-toast";
 
 interface FormValues {
   [key: string]: string;
@@ -61,7 +62,6 @@ export const Register = () => {
       }
       await RegisterUser(form, dispatch, navigate);
     } catch (error) {
-      console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -89,6 +89,7 @@ export const Register = () => {
 
   return (
     <div className="flex justify-center items-center h-screen">
+      <Toaster position="top-right" reverseOrder={true} />
       {isLoading && <Loading />}
       <Formik
         initialValues={initialValues}

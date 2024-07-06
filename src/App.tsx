@@ -5,6 +5,7 @@ import { LayoutDefault } from "./Components/LayoutDefault/LayoutDefautl";
 import { Login } from "./Page/Login/Login";
 import { Register } from "./Page/Register/Register";
 import React from "react";
+import { RestPassword } from "./Page/RestPassword/RestPassword";
 
 export const App = () => {
   return (
@@ -36,6 +37,7 @@ export const App = () => {
           })}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/rest-password" element={<RestPassword />} />
         </Routes>
       </div>
     </Router>

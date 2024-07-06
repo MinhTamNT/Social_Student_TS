@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { LoginUser } from "../../Redux/apiRequest";
 import toast, { Toaster } from "react-hot-toast";
@@ -17,13 +17,13 @@ const formFields = [
     type: "text",
     name: "username",
     placeholder: "Username",
-    className: "p-2 w-[300px] border-[1px] mt-2 rounded-md mb-2",
+    className: "p-2 w-full border border-gray-300 mt-2 rounded-md mb-2",
   },
   {
     type: "password",
     name: "password",
     placeholder: "Password",
-    className: "p-2 w-[300px] border-[1px] mt-2 rounded-md",
+    className: "p-2 w-full border border-gray-300 mt-2 rounded-md",
   },
 ];
 
@@ -56,8 +56,8 @@ export const Login = () => {
       await LoginUser(newUser, dispatch, navigate);
       setSubmitting(false);
     } catch (error) {
-      console.log("Login fail");
-      toast.error("Can you you check password or username");
+      console.log("Login failed");
+      toast.error("Please check your username or password");
     } finally {
       setIsSubmitting(false);
       setIsLoading(false);
@@ -70,7 +70,7 @@ export const Login = () => {
   });
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen">
+    <div className="flex flex-col justify-center items-center h-screen bg-white">
       <Toaster position="top-right" reverseOrder={true} />
       {isLoading && <Loading />}
       <Formik
@@ -78,8 +78,8 @@ export const Login = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        <Form className="w-full md:w-[450px] md:h-[350px] md:shadow-md flex flex-col justify-center items-center md:flex-col h-full">
-          <h1 className="font-bold text-[30px] text-center uppercase">
+        <Form className="w-full md:w-[420px] bg-white md:block  p-6 rounded-md shadow-md">
+          <h1 className="font-bold text-[30px] text-center uppercase mb-4">
             Welcome back
           </h1>
           {formFields.map((field) => (
@@ -88,24 +88,29 @@ export const Login = () => {
               <ErrorMessage
                 name={field.name}
                 component="div"
-                className="text-red-500 text-left"
+                className="text-red-500 text-left mt-1"
               />
             </React.Fragment>
           ))}
+          <div className="text-right mt-2">
+            <Link to="/rest-password" className="text-blue-500">
+              Reset Password
+            </Link>
+          </div>
           <button
             type="submit"
-            className={`w-[300px] text-white bg-black p-3 rounded-md mt-2 ${
+            className={`w-full text-white bg-black p-3 rounded-md mt-4 ${
               isSubmitting ? "opacity-50 cursor-not-allowed" : ""
             }`}
             disabled={isSubmitting}
           >
             Sign in
           </button>
-          <p className="flex justify-center items-center gap-2 text-14 mt-2 text-center">
+          <p className="flex justify-center items-center gap-2 text-sm mt-4">
             Don't have an account?
             <button
               type="button"
-              className="text-blue-400"
+              className="text-blue-500"
               onClick={() => navigate("/register")}
             >
               Sign up

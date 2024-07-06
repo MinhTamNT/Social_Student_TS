@@ -21,6 +21,8 @@ export const endpoints = {
   "get-user-id": (userId: number) => `/user/${userId}/get-user/`,
   unfollow: (friendId: number) => `/follow/${friendId}/remove_friend/`,
   "list-friend-user": (userId: number) => `/follow/${userId}/get_friends/`,
+  "rest-password-send-mail": "/account/send-reset-code/",
+  "rest-password": "/account/reset-password/",
 };
 
 export const AuthAPI = (accessToken: string): AxiosInstance => {
