@@ -6,7 +6,12 @@ import { useIsMobile } from "../../Hook/useIsMobile";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { AuthAPI, endpoints } from "../../Service/ApiConfig";
-import { getUserSucess } from "../../Redux/userSlice";
+import {
+  getUserSucess,
+  updateError,
+  updateStart,
+  updateSuccess,
+} from "../../Redux/userSlice";
 
 export const Home: React.FC = () => {
   const isMobile = useIsMobile();
@@ -18,17 +23,21 @@ export const Home: React.FC = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     const getUser = async () => {
+      dispatch(updateStart());
       try {
         const res = await AuthAPI(accessToken?.access_token).get(
           endpoints["current_user"]
         );
         dispatch(getUserSucess(res.data));
+        dispatch(updateSuccess(res.data));
+        console.log(res.data);
       } catch (error) {
         console.log(error);
+        dispatch(updateError());
       }
     };
     getUser();
-  }, [accessToken?.access_token]);
+  }, [accessToken?.access_token, dispatch]);
 
   return (
     <div className="md:w-[1120px] md:ml-[100px] md:px-2 md:pt-2">

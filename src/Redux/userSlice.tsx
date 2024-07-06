@@ -6,6 +6,11 @@ interface UserState {
     isFetching: boolean;
     error: boolean;
   };
+  followUser: {
+    currentUser: any;
+    pending: boolean;
+    error: boolean;
+  };
   loadingPage: boolean;
 }
 
@@ -13,6 +18,11 @@ const initialState: UserState = {
   user: {
     currentUser: null,
     isFetching: false,
+    error: false,
+  },
+  followUser: {
+    currentUser: null,
+    pending: false,
     error: false,
   },
   loadingPage: false,
@@ -47,6 +57,17 @@ export const userSlice = createSlice({
       state.user.error = false;
       state.user.isFetching = false;
     },
+    deletedFollowUser: (state) => {
+      state.followUser.pending = false;
+    },
+    deletedfollowUserSuccess: (state, action) => {
+      state.followUser.currentUser = action.payload;
+      state.followUser.pending = false;
+    },
+    deletedfollowUserFailed: (state) => {
+      state.followUser.pending = false;
+      state.followUser.error = false;
+    },
   },
 });
 
@@ -57,5 +78,8 @@ export const {
   updateError,
   updateSuccess,
   updateStart,
+  deletedFollowUser,
+  deletedfollowUserFailed,
+  deletedfollowUserSuccess,
 } = userSlice.actions;
 export default userSlice.reducer;

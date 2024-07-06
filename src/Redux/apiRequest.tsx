@@ -26,7 +26,13 @@ import {
   reactPostStart,
   reactPostSuccess,
 } from "./postSlice";
-import { updateError, updateStart } from "./userSlice";
+import {
+  deletedFollowUser,
+  deletedfollowUserFailed,
+  updateError,
+  updateStart,
+} from "./userSlice";
+import { access } from "fs";
 
 export const RegisterUser = async (
   newUser: FormData,
@@ -75,7 +81,7 @@ export const updateUser = async (
 ) => {
   dispatch(updateStart());
   try {
-    const res = await AuthAPI(access_token).put(
+    const res = await AuthAPI(access_token).patch(
       endpoints["current_user"],
       newUser
     );
@@ -193,5 +199,22 @@ export const commentPost = async (
   } catch (error) {
     console.log(error);
     dispatch(CommentPostFail());
+  }
+};
+
+export const unFollowUser = async (
+  friendId: number,
+  access_token: string,
+  dispatch: any
+) => {
+  dispatch(deletedFollowUser());
+  try {
+    const res = await AuthAPI(access_token).delete(
+      endpoints["unfollow"](friendId)
+    );
+    dispatch(res.data);
+  } catch (error) {
+    console.log(error);
+    dispatch(deletedfollowUserFailed());
   }
 };

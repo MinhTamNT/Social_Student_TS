@@ -19,6 +19,7 @@ export const endpoints = {
   "search-post": (some: string) => `/post/search/?query=${some}`,
   "get-all-post-user": (userId: number) => `/post/${userId}/posts-of-user/`,
   "get-user-id": (userId: number) => `/user/${userId}/get-user/`,
+  unfollow: (friendId: number) => `/follow/${friendId}/remove_friend/`,
 };
 
 export const AuthAPI = (accessToken: string): AxiosInstance => {

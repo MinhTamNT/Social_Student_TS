@@ -8,9 +8,10 @@ import PostContent from "../../Components/Post/PostContent";
 import PostHeader from "../../Components/Post/PostHeader";
 import ReactionSelector from "../../Components/Post/ReactionPost";
 import { useIsMobile } from "../../Hook/useIsMobile";
-import { reactEmojiPost } from "../../Redux/apiRequest";
+import { reactEmojiPost, unFollowUser } from "../../Redux/apiRequest";
 import { RootState } from "../../Redux/store";
 import { AuthAPI, endpoints } from "../../Service/ApiConfig";
+import { getUserSucess } from "../../Redux/userSlice";
 
 export const FriendPage: React.FC = () => {
   const { otherId } = useParams<{ otherId: string }>();
@@ -31,6 +32,18 @@ export const FriendPage: React.FC = () => {
         endpoints["get-user-id"](userId)
       );
       setOtherUser(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchAndUpdateFollowingStatus = async () => {
+    try {
+      const res = await AuthAPI(auth?.access_token).get(
+        endpoints["current_user"]
+      );
+      dispatch(getUserSucess(res.data));
+      console.log(res.data);
     } catch (error) {
       console.log(error);
     }
@@ -89,11 +102,23 @@ export const FriendPage: React.FC = () => {
         friend_id: friendId,
       };
       ws.send(JSON.stringify(requestData));
+      fetchAndUpdateFollowingStatus();
     };
+
+    ws.onmessage = () => {};
 
     ws.onclose = () => {
       console.log("WebSocket connection closed");
     };
+  };
+
+  const handlerRemoveFollow = async (followId: number) => {
+    try {
+      await unFollowUser(followId, auth?.access_token, dispatch);
+      await fetchAndUpdateFollowingStatus();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -105,10 +130,8 @@ export const FriendPage: React.FC = () => {
   const goBack = () => {};
   let isFollowing = null;
   const userFollowing: (string | number)[] = user?.following || [];
-  console.log("Following list:", userFollowing);
   if (otherId !== undefined) {
     const otherIdStr = otherId.toString();
-
     isFollowing = userFollowing.map((id) => id.toString()).includes(otherIdStr);
 
     console.log("Is Following:", isFollowing);
@@ -167,7 +190,7 @@ export const FriendPage: React.FC = () => {
                 <>
                   <button
                     className="flex text-white items-center justify-center bg-slate-500 md:w-[500px] w-full h-9 p-2 rounded-lg"
-                    onClick={() => sendFriendRequest(otherUser?.id)}
+                    onClick={() => handlerRemoveFollow(otherUser?.id)}
                   >
                     <CiUser size={"24"} />
                     Unfollow

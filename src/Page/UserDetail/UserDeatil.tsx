@@ -53,6 +53,8 @@ export const UserDeatil = () => {
     };
     getAllPost();
   }, [user?.id]);
+  console.log(user);
+  
   const listFrined = [
     {
       id: 1,
@@ -104,10 +106,10 @@ export const UserDeatil = () => {
       <div className="md:w-[1095px] mx-auto">
         <div className="picture_user relative ">
           <div className="cover_picture ">
-            {user.cover_picture ? (
+            {user.cover_photo ? (
               <>
                 <img
-                  src=""
+                  src={user?.cover_photo}
                   alt="cover_photo_user"
                   className="w-full h-[149px] md:h-[349px] border-none object-cover"
                 />

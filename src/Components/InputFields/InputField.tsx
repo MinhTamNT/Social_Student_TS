@@ -1,17 +1,19 @@
 import React from "react";
 
-interface IProp {
+interface InputFieldProps {
   data: string;
-  setData: (e: React.ChangeEvent<HTMLInputElement>) => void; // Thêm prop onChange
+  setData: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
   value: string;
   label?: string;
-  inputType: string;
-  type?: string;
+  inputType: "text" | "textarea"; // Specify supported input types
+  type?: string; // Add type prop if needed for input type
   classNameLabel?: string;
   classNameInput?: string;
 }
 
-export const InputField = ({
+export const InputField: React.FC<InputFieldProps> = ({
   data,
   setData,
   value,
@@ -20,22 +22,24 @@ export const InputField = ({
   type,
   classNameLabel,
   classNameInput,
-}: IProp) => {
+}) => {
   return (
     <div className="flex flex-col mb-5">
       {label && <label className={classNameLabel}>{label}</label>}
       {inputType === "textarea" ? (
         <textarea
+          className={classNameInput} // Add className for styling
           placeholder={label || ""}
-          value={value} // Sử dụng prop value thay cho data
-        ></textarea>
+          value={value}
+          onChange={setData} // Use onChange to update data
+        />
       ) : (
         <input
-          type={type}
-          className={classNameInput}
-          placeholder={data}
-          value={value} // Sử dụng prop value thay cho data
-          onChange={setData} // Sử dụng prop onChange
+          type={type || "text"} // Default to "text" type if not specified
+          className={classNameInput} // Add className for styling
+          placeholder={label || ""}
+          value={value}
+          onChange={setData} // Use onChange to update data
         />
       )}
     </div>
