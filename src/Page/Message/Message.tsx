@@ -30,7 +30,7 @@ export const Message = () => {
           setSelectedUser={setSelectedUser}
         />
       </div>
-      <div className="w-[700px]">
+      <div className="w-[700px] h-[600px]">
         <MessageChat selectedUser={selectedUser} />
       </div>
     </section>

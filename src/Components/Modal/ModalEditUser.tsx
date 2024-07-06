@@ -32,7 +32,7 @@ const ModalEditUser: React.FC<Props> = ({ setModalEdit, profile }) => {
   const [isEditPicture, setIsEditPicture] = useState<boolean>(false);
   const [editType, setEditType] = useState<"avatar_user" | "cover_photo">(
     "avatar_user"
-  ); // State to track whether editing avatar_user or cover_photo
+  );
   const [formData, setFormData] = useState<Profile>({
     id: profile.id,
     first_name: profile.first_name,
@@ -76,7 +76,7 @@ const ModalEditUser: React.FC<Props> = ({ setModalEdit, profile }) => {
 
   const handleOpenModalUpload = (type: "avatar_user" | "cover_photo") => {
     setIsEditPicture(true);
-    setEditType(type); // Set editType based on the parameter
+    setEditType(type);
   };
 
   const handleUploadComplete = (imageUrl: string) => {

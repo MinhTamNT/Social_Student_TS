@@ -16,35 +16,17 @@ interface IProp {
     last_name: string;
     email: string;
   };
+  listFriend: any[];
 }
 
-export const TabsPost: React.FC<IProp> = ({ user }: IProp) => {
+export const TabsPost: React.FC<IProp> = ({ user, listFriend }: IProp) => {
   const auth = useSelector(
     (state: RootState) => state?.auth?.login?.currentUser
   );
   const [post, setPost] = useState([]);
   const dispatch = useDispatch();
   const [, setRefreshPosts] = useState(false);
-  const listFrined = [
-    {
-      id: 1,
-      username: "Nguyen Van A",
-      avatar_user:
-        "https://i.pinimg.com/564x/24/21/85/242185eaef43192fc3f9646932fe3b46.jpg",
-    },
-    {
-      id: 2,
-      username: "Nguyen Van C",
-      avatar_user:
-        "https://taimienphi.vn/tmp/cf/aut/UCJh-I6e5-pGG8-5NjT-O83K-mmJy-eZta-9nqH-anh-dai-dien-dep-cute-1.jpg",
-    },
-    {
-      id: 3,
-      username: "Nguyen Van D",
-      avatar_user:
-        "https://i.9mobi.vn/cf/Images/tt/2021/3/15/hinh-anh-dai-dien-dep-dung-cho-facebook-instagram-zalo-9.jpg",
-    },
-  ];
+
   useEffect(() => {
     const getAllPost = async () => {
       const res = await AuthAPI(auth?.access_token).get(
@@ -83,10 +65,10 @@ export const TabsPost: React.FC<IProp> = ({ user }: IProp) => {
               <p className="text-blue-500 cursor-pointer">Xem tất cả</p>
             </div>
             <div className="grid grid-cols-3 gap-4">
-              {listFrined.map((friend, index) => (
+              {listFriend.map((friend, index) => (
                 <div className="col-span-1">
                   <img
-                    src={friend.avatar_user}
+                    src={friend?.friend?.avatar_user}
                     alt="friend-avatar"
                     className="rounded-lg h-28"
                   />

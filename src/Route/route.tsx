@@ -4,7 +4,7 @@ import { ErrorPage } from "../Page/Error/ErrorPage";
 import { FriendPage } from "../Page/FriendPage/FriendPage";
 import { Home } from "../Page/Home/Home";
 import { Message } from "../Page/Message/Message";
-import { UserDeatil } from "../Page/UserDetail/UserDeatil";
+import { UserDetail } from "../Page/UserDetail/UserDeatil";
 export const RouteSocial = [
   {
     path: config.route.home,
@@ -14,7 +14,7 @@ export const RouteSocial = [
 
   {
     path: `${config.route.profile}/:username`,
-    component: UserDeatil,
+    component: UserDetail,
     layout: null,
     isAuthencatied: true,
   },

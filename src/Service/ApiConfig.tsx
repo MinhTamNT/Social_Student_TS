@@ -20,6 +20,7 @@ export const endpoints = {
   "get-all-post-user": (userId: number) => `/post/${userId}/posts-of-user/`,
   "get-user-id": (userId: number) => `/user/${userId}/get-user/`,
   unfollow: (friendId: number) => `/follow/${friendId}/remove_friend/`,
+  "list-friend-user": (userId: number) => `/follow/${userId}/get_friends/`,
 };
 
 export const AuthAPI = (accessToken: string): AxiosInstance => {
