@@ -1,19 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
-import "tippy.js/dist/tippy.css";
-import "tippy.js/dist/svg-arrow.css";
-import { SlLike } from "react-icons/sl";
-import { FcLike } from "react-icons/fc";
-import { FaRegFaceLaughSquint } from "react-icons/fa6";
-import { ModalDeletedPost } from "../Modal/ModalDeletedPost";
 import { AuthAPI, endpoints } from "../../Service/ApiConfig";
-import { reactEmojiPost } from "../../Redux/apiRequest";
+import { deletedPostReaction, reactEmojiPost } from "../../Redux/apiRequest";
 import PostHeader from "./PostHeader";
 import PostContent from "./PostContent";
 import ReactionSelector from "./ReactionPost";
 import ModalPostDetail from "../Modal/ModaLPostDetail";
 import { IoTrashBinOutline } from "react-icons/io5";
+import { ModalDeletedPost } from "../Modal/ModalDeletedPost";
+import { SlLike } from "react-icons/sl";
+import { FcLike } from "react-icons/fc";
+import { FaRegFaceLaughSquint } from "react-icons/fa6";
+import { FaSpinner } from "react-icons/fa";
 interface PostProps {
   refreshPosts: boolean;
   setRefreshPosts: React.Dispatch<React.SetStateAction<boolean>>;
@@ -37,10 +36,13 @@ export const Post: React.FC<PostProps> = ({
   setRefreshPosts,
 }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [isOpenModalDelatil, setIsOpenModalDelatil] = useState<boolean>(false);
+  const [isOpenModalDetail, setIsOpenModalDetail] = useState<boolean>(false);
   const [allPost, setAllPost] = useState<any[]>([]);
   const [selectedPost, setSelectedPost] = useState<any>(null);
-
+  const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasMorePosts, setHasMorePosts] = useState(true);
+  const observerRef = useRef<HTMLDivElement | null>(null);
   const user = useSelector(
     (state: RootState) => state?.user?.user?.currentUser
   );
@@ -54,38 +56,82 @@ export const Post: React.FC<PostProps> = ({
   };
   const handlePostDetail = (post: any) => {
     setSelectedPost(post);
-    setIsOpenModalDelatil(true);
+    setIsOpenModalDetail(true);
   };
 
+  const fetchPosts = useCallback(async () => {
+    try {
+      let url = `${endpoints["all_post"]}?page=${page}`;
+      setIsLoading(true);
+      const res = await AuthAPI(auth?.access_token).get(url);
+      const newPosts = res?.data?.results;
+      if (newPosts.length > 0) {
+        setAllPost((prev) => {
+          const uniquePosts = [...prev, ...newPosts].reduce((acc, post) => {
+            if (!acc.find((item: any) => item.id === post.id)) {
+              acc.push(post);
+            }
+            return acc;
+          }, []);
+          return uniquePosts;
+        });
+      }
+      if (res?.data?.next === null) {
+        setHasMorePosts(false);
+      }
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
+  }, [page, auth?.access_token]);
+
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const res = await AuthAPI(auth?.access_token).get(
-          endpoints["all_post"]
-        );
-        setAllPost(res.data);
-      } catch (error) {
-        console.log(error);
+    fetchPosts();
+  }, [refreshPosts, fetchPosts]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !isLoading && hasMorePosts) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      },
+      {
+        threshold: 1.0,
+      }
+    );
+
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+
+    return () => {
+      if (observerRef.current) {
+        observer.unobserve(observerRef.current);
       }
     };
-    fetchPosts();
-  }, [refreshPosts]);
+  }, [isLoading, hasMorePosts]);
 
   const handleReactionClick = async (postId: number, reactType: string) => {
     try {
       await reactEmojiPost(postId, auth?.access_token, dispatch, {
         reaction_type: reactType,
       });
-      setRefreshPosts((prev) => !prev);
+      fetchPosts();
     } catch (error) {
       console.error("Error reacting to post:", error);
     }
   };
-  const handleReactionRemove = () => {
-    console.log("log");
+  const handleReactionRemove = async (postId: number) => {
+    try {
+      await deletedPostReaction(postId, auth?.access_token, dispatch);
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
-    <section className="md:w-[680px] w-[420px]  bg-white mt-2 md:p-4 p-2 shadow rounded-lg">
+    <section className="md:w-[680px] w-[420px] bg-white mt-2 md:p-4 p-2 shadow rounded-lg">
       {allPost.map((post, index) => (
         <div
           key={index}
@@ -127,13 +173,20 @@ export const Post: React.FC<PostProps> = ({
           </div>
         </div>
       ))}
-      {isOpenModalDelatil && (
+      {isOpenModalDetail && (
         <ModalPostDetail
           post={selectedPost}
-          closeModal={() => setIsOpenModalDelatil(false)}
+          closeModal={() => setIsOpenModalDetail(false)}
           setRefreshPosts={setRefreshPosts}
         />
       )}
+      <div ref={observerRef}></div>
+      {isLoading && (
+        <div className="flex justify-center items-center mt-4">
+          <FaSpinner className="animate-spin" size={24} />
+        </div>
+      )}
+      {!hasMorePosts && <p>Không còn bài viết nào nữa.</p>}
     </section>
   );
 };

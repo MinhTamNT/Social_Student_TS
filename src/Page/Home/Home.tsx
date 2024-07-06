@@ -14,6 +14,7 @@ export const Home: React.FC = () => {
   const accessToken = useSelector(
     (state: RootState) => state?.auth?.login?.currentUser
   );
+
   const dispatch = useDispatch();
   useEffect(() => {
     const getUser = async () => {

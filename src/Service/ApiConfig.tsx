@@ -10,7 +10,7 @@ export const endpoints = {
   all_post: "/post/",
   deletePost: (postId: number) => `/post/${postId}/`,
   reactPost: (Postid: number) => `/post/${Postid}/reaction/`,
-  deleteReaction: (reactionId: number) => `/post/${reactionId}/reaction`,
+  deleteReaction: (reactionId: number) => `/post/${reactionId}/reaction/`,
   "comment-post": (postId: number) => `/post/${postId}/comment/`,
   "get-comment-post": (postId: number) => `/post/${postId}/comment/`,
   "deleted-comment": (commentId: number) => `/post/comment/${commentId}/`,

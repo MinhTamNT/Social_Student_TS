@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
-import { AuthAPI, endpoints } from "../../Service/ApiConfig";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../Redux/store";
-import { useIsMobile } from "../../Hook/useIsMobile";
+import { CiUser } from "react-icons/ci";
 import { GrLinkPrevious } from "react-icons/gr";
-import { MdEdit } from "react-icons/md";
-import PostHeader from "../../Components/Post/PostHeader";
-import PostContent from "../../Components/Post/PostContent";
-import ReactionSelector from "../../Components/Post/ReactionPost";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import { mapReactionToIcon } from "../../Components/Post/Post";
+import PostContent from "../../Components/Post/PostContent";
+import PostHeader from "../../Components/Post/PostHeader";
+import ReactionSelector from "../../Components/Post/ReactionPost";
+import { useIsMobile } from "../../Hook/useIsMobile";
 import { reactEmojiPost } from "../../Redux/apiRequest";
+import { RootState } from "../../Redux/store";
+import { AuthAPI, endpoints } from "../../Service/ApiConfig";
 
 export const FriendPage: React.FC = () => {
   const { otherId } = useParams<{ otherId: string }>();
@@ -19,10 +19,11 @@ export const FriendPage: React.FC = () => {
   const auth = useSelector(
     (state: RootState) => state?.auth?.login?.currentUser
   );
+  const user = useSelector((state: RootState) => state?.user?.user.currentUser);
   const ws = useRef<WebSocket | null>(null);
   const isMobile = useIsMobile();
   const [post, setPost] = useState<any[]>([]);
-  const [, setRefreshPosts] = useState<boolean>(false);
+  const [, setRefreshPosts] = useState(false);
 
   const getOtherUser = async (userId: number) => {
     try {
@@ -90,12 +91,6 @@ export const FriendPage: React.FC = () => {
       ws.send(JSON.stringify(requestData));
     };
 
-    ws.onmessage = (event) => {};
-
-    ws.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
-
     ws.onclose = () => {
       console.log("WebSocket connection closed");
     };
@@ -108,6 +103,18 @@ export const FriendPage: React.FC = () => {
   }, []);
 
   const goBack = () => {};
+  let isFollowing = null;
+  const userFollowing: (string | number)[] = user?.following || [];
+  console.log("Following list:", userFollowing);
+  if (otherId !== undefined) {
+    const otherIdStr = otherId.toString();
+
+    isFollowing = userFollowing.map((id) => id.toString()).includes(otherIdStr);
+
+    console.log("Is Following:", isFollowing);
+  } else {
+    console.log("Other ID is undefined");
+  }
 
   return (
     <section className="relative h-screen">
@@ -156,13 +163,27 @@ export const FriendPage: React.FC = () => {
                   15 <span className="text-gray-500">Friend</span>
                 </span>
               </div>
-              <button
-                className="flex text-white items-center justify-center bg-blue-500 md:w-[500px] w-full h-9 p-2 rounded-lg"
-                onClick={() => sendFriendRequest(otherUser?.id)}
-              >
-                <MdEdit size={"24"} />
-                Add Friend
-              </button>
+              {isFollowing ? (
+                <>
+                  <button
+                    className="flex text-white items-center justify-center bg-slate-500 md:w-[500px] w-full h-9 p-2 rounded-lg"
+                    onClick={() => sendFriendRequest(otherUser?.id)}
+                  >
+                    <CiUser size={"24"} />
+                    Unfollow
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    className="flex text-white items-center justify-center bg-red-500 md:w-[500px] w-full h-9 p-2 rounded-lg"
+                    onClick={() => sendFriendRequest(otherUser?.id)}
+                  >
+                    <CiUser size={"24"} />
+                    Follow
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -199,7 +220,7 @@ export const FriendPage: React.FC = () => {
                 className="flex text-white items-center justify-center bg-blue-500 md:w-[500px] w-full h-9 p-2 rounded-lg"
                 onClick={() => sendFriendRequest(otherUser?.id)}
               >
-                <MdEdit size={"24"} />
+                <CiUser size={"24"} />
                 Add Friend
               </button>
             </div>

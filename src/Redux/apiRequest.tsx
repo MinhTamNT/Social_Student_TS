@@ -18,6 +18,8 @@ import {
   deletePostStart,
   deletePostSuccess,
   deleteReactionPostFailed,
+  deleteReactionPostStart,
+  deleteReactionPostSuccess,
   getAllPostStart,
   getAllPostSuccess,
   reactPostFailed,
@@ -159,14 +161,16 @@ export const reactEmojiPost = async (
 };
 
 export const deletedPostReaction = async (
-  reactionId: number,
+  postId: number,
   access_token: string,
   dispatch: any
 ) => {
+  dispatch(deleteReactionPostStart());
   try {
     const res = await AuthAPI(access_token).delete(
-      endpoints.deleteReaction(reactionId)
+      endpoints.deleteReaction(postId)
     );
+    dispatch(deleteReactionPostSuccess(res.data));
   } catch (error) {
     console.log(error);
     dispatch(deleteReactionPostFailed());
